@@ -5,7 +5,7 @@ function getConstants(){
         canvasHeight: 500,
         canvasId: "canvas0",
         cellSize: 10,
-        cellPadding: 0,
+        cellPadding: 1,
         iterationsPerFrame: 1000,
         temperatureSlider: {
             id: "temperatureSlider0",

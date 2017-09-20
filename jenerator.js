@@ -74,6 +74,7 @@ function getJenerator(){
         const yp = constants.canvasHeight;
         const xp = constants.canvasWidth;
         const s = constants.getActualSize();
+        const sizeToFill = constants.cellSize;
 
         // test with hex00 and hex2-1
 
@@ -93,7 +94,7 @@ function getJenerator(){
             let jMax = Math.ceil(yBound - (i/2))
             for (var j = jMin; j < jMax; j++) {
                 let xyPix = transformToPix([i, j], s);
-                drawHex(ctx, xyPix[0], xyPix[1], s);
+                drawHex(ctx, xyPix[0], xyPix[1], sizeToFill);
             }
         }
 
