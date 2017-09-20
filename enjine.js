@@ -19,7 +19,7 @@ function getEnjine(constants, strategy, state, ctx){
             break;
         case "ising":
             let rand1or1 = () => Math.random() < 0.5 ? 1 : -1;
-            let getColour = (s) => s == 1 ? "rgb(255, 255, 255)" : "rgb(0, 0, 0)";
+            let getColour = (s) => s == 1 ? "rgb(200, 200, 200)" : "rgb(50, 50, 50)";
             function getNeighbours(state, i, j){
                 let neighbours = new Array(4);
                 neighbours[0] = pack(i === 0 ? state.nx - 1 : i - 1, j);
@@ -61,6 +61,9 @@ function getEnjine(constants, strategy, state, ctx){
                 ctx.fillStyle = getColour(state.array[r]);
                 ctx.fillRect(x, y, size, size);
             };
+            break;
+        case "hex":
+            enjine.run = function(){};
             break;
     };
     enjine.start = function(iterationsPerFrame){
