@@ -76,17 +76,9 @@ function getJenerator(){
         const s = constants.getActualSize();
         const sizeToFill = constants.cellSize;
 
-        // test with hex00 and hex2-1
-
-        //hex00 should be [10, 8.66]
-        console.log(transformToPix([0,0],s));
-        //hex2-1 should be [40, 8.66]
-        console.log(transformToPix([2,-1],s));
-        // we are 1.3660254037844386 times too high
-
         // lower horizontal bound on hexagons
-        let xBound = Math.floor(transformToHex([constants.canvasWidth, 0], s)[0]);
-        let yBound = Math.floor(transformToHex([0, constants.canvasHeight], s)[1]);
+        let xBound = Math.floor(transformToHex([constants.canvasWidth+s, 0], s)[0]);
+        let yBound = Math.floor(transformToHex([-s, constants.canvasHeight], s)[1]);
 
         // Draw them for lols
         for (var i = 0; i < xBound; i++) {
@@ -148,6 +140,7 @@ function drawHex(ctx, x, y, s){
     // Draw a flat-top hexagon
     // centered on (x,y) with side length s
     ctx.fillStyle = randomColour();
+    // ctx.strokeStyle = "rgb(0,0,0)";
     ctx.beginPath();
     // Start with the right point
     ctx.moveTo(x + s, y);
@@ -164,5 +157,7 @@ function drawHex(ctx, x, y, s){
     // Back to start
     ctx.lineTo(x + s, y);
     ctx.closePath();
+    // If we want to draw and outline around each hexagon
+    // ctx.stroke();
     ctx.fill();
 }
