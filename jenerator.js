@@ -91,7 +91,7 @@ function getJenerator(){
         // Draw them for lols
         for (var i = 0; i < xBound; i++) {
             let jMin = Math.ceil(-i/2);
-            let jMax = Math.ceil(yBound - (i/2))
+            let jMax = Math.floor(yBound - (i/2))
             for (var j = jMin; j < jMax; j++) {
                 let xyPix = transformToPix([i, j], s);
                 drawHex(ctx, xyPix[0], xyPix[1], sizeToFill);
