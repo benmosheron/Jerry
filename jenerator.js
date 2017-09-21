@@ -78,17 +78,52 @@ function getJenerator(){
 
         // lower horizontal bound on hexagons
         let xBound = Math.floor(transformToHex([constants.canvasWidth+s, 0], s)[0]);
-        let yBound = Math.floor(transformToHex([-s, constants.canvasHeight], s)[1]);
+        // -(s/root3) because every other vertical column will be s/root3 lower
+        let yBound = Math.floor(transformToHex([-s, constants.canvasHeight-(s/root3)], s)[1]);
+        let bfs = getBoundaryFunctions([xBound,yBound],s);
 
         // Draw them for lols
         for (var i = 0; i < xBound; i++) {
-            let jMin = Math.ceil(-i/2);
-            let jMax = Math.floor(yBound - (i/2))
+            let jMin = bfs.generateJMin(i);
+            let jMax = bfs.generateJMax(i);
             for (var j = jMin; j < jMax; j++) {
                 let xyPix = transformToPix([i, j], s);
-                drawHex(ctx, xyPix[0], xyPix[1], sizeToFill);
+                drawHexRandom(ctx, xyPix[0], xyPix[1], sizeToFill);
             }
         }
+
+        // testing the limits
+        for (var i = 0; i < xBound; i++) {
+            let jMin = bfs.generateJMin(i);
+            let jMax = bfs.generateJMax(i);
+            for (var j = jMin; j < jMax; j++) {
+                let xyPix = transformToPix([i, j], s);
+                let draw = (colour) => drawHex(ctx, xyPix[0], xyPix[1], sizeToFill, colour);
+                if(bfs.isLeftBoundary([i,j])){
+                    draw("rgb(50,50,50)");
+                }
+                if(bfs.isRightBoundary([i,j])){
+                    draw("rgb(50,50,50)");
+                }
+                if(bfs.isTopBoundary([i,j])){
+                    draw("rgb(0,0,0)");
+                }
+                if(bfs.isInnerTopBoundary([i,j])){
+                    draw("rgb(100,100,100)");
+                }
+                if(bfs.isBottomBoundary([i,j])){
+                    draw("rgb(0,0,0");
+                }
+                if(bfs.isInnerBottomBoundary([i,j])){
+                    draw("rgb(100,100,100");
+                }
+            }
+        }
+        // nayba stuff
+        // getHexNeighbours([0,0]).forEach(function(nHex) {
+        //     let nPix = transformToPix(nHex, s);
+        //     drawHex(ctx, nPix[0], nPix[1], sizeToFill+5, "rgb(0,0,0)");
+        // }, this);
 
         return state;
     }
@@ -108,6 +143,12 @@ let randomColour = () => `rgb(${rand255()}, ${rand255()}, ${rand255()})`;
 function transformToPix(xyHex, s){
     let xHex = xyHex[0];
     let yHex = xyHex[1];
+
+    // Transforms are T_hp = RXYv + Offset where:
+    // X is the scaling of the x axis
+    // Y is the scaling of the y axis
+    // R is the rotation of the x axis down by 30 degrees
+    // Offset is the offset amount of the first hexagon
 
     // A proportion of the x value gets transferred to the y axis
     // due to the 30 degree rotation of the x axis.
@@ -136,10 +177,46 @@ function transformToHex(xyPix, s){
     return [xHex, yHex];
 }
 
-function drawHex(ctx, x, y, s){
+function getHexNeighbours([i,j]){
+    // A hex has six neighbours, 
+    // one to four of which may be on the periodic boundary
+    return [
+        [i+1,j],        
+        [i,j+1],
+        [i-1,j],
+        [i,j-1],
+        [i+1,j-1],
+        [i-1,j+1],
+    ];
+}
+
+function getCanonicalHexPosition([i,j]){
+    // What we really want is a canonical set of hexagons.
+    // Every hexagon that exists in the 2d plane can be mapped to a hex
+    // in this canonical set
+}
+
+function getBoundaryFunctions(xyHexMax, s){
+    return {
+        generateJMin: (i) => Math.ceil(-i/2),
+        generateJMax: (i) => Math.floor(xyHexMax[1] - ((i-1)/2)), //either i-1 or i+1 depending on height
+        isLeftBoundary: (xyHex) => xyHex[0] === 0,
+        isRightBoundary: (xyHex) => xyHex[0] === xyHexMax[0] - 1,
+        isTopBoundary: (xyHex) => xyHex[0] === -xyHex[1] * 2,
+        isInnerTopBoundary: (xyHex) => xyHex[0] === -2 * xyHex[1] + 1,
+        isBottomBoundary: (xyHex) => xyHex[0] === -2 * (xyHex[1]-(xyHexMax[1]-1)) + 1,
+        isInnerBottomBoundary: (xyHex) => xyHex[0] === -(xyHex[1]-xyHexMax[1]+1) * 2,
+    };
+}
+
+
+function drawHexRandom(ctx, x, y, s){
+    drawHex(ctx, x, y, s, randomColour());
+}
+function drawHex(ctx, x, y, s, colour){
     // Draw a flat-top hexagon
     // centered on (x,y) with side length s
-    ctx.fillStyle = randomColour();
+    ctx.fillStyle = colour;
     // ctx.strokeStyle = "rgb(0,0,0)";
     ctx.beginPath();
     // Start with the right point

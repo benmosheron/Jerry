@@ -2,7 +2,7 @@ function getConstants(){
     c = {
         strategy: "hex",
         canvasWidth: 700,
-        canvasHeight: 496,
+        canvasHeight: 487,
         canvasId: "canvas0",
         cellSize: 10,
         cellPadding: 1,
