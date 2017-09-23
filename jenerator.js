@@ -54,7 +54,7 @@ function getJenerator(){
         const nx = Math.floor(constants.canvasWidth / size);
         const ny = Math.floor(constants.canvasHeight / size);
         const fillSize = constants.cellSize;
-        const pad = constants.cellPadding;
+        const pad = constants.cellPadding / 2;
         state.length = nx * ny;
         state.nx = nx;
         state.ny = ny;
