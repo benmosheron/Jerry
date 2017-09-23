@@ -93,51 +93,12 @@ function getJenerator(){
             }
         }
 
-        // testing the limits
-        // for (var i = 0; i < xBound; i++) {
-        //     let jMin = bfs.generateJMin(i);
-        //     let jMax = bfs.generateJMax(i);
-        //     for (var j = jMin; j < jMax; j++) {
-        //         let xyPix = transformToPix([i, j], s);
-        //         let draw = (colour) => drawHex(ctx, xyPix[0], xyPix[1], sizeToFill, colour);
-        //         if(bfs.isInnerTopBoundary([i,j])){
-        //             draw("rgb(100,100,100)");
-        //         }
-        //         if(bfs.isInnerBottomBoundary([i,j])){
-        //             draw("rgb(100,100,100");
-        //         }
-        //         if(bfs.isLeftBoundary([i,j])){
-        //             draw("rgb(50,50,50)");
-        //         }
-        //         if(bfs.isRightBoundary([i,j])){
-        //             draw("rgb(50,50,50)");
-        //         }
-        //         if(bfs.isTopBoundary([i,j])){
-        //             draw("rgb(0,0,0)");
-        //         }
-        //         if(bfs.isBottomBoundary([i,j])){
-        //             draw("rgb(0,0,0");
-        //         }
-        //     }
-        // }
-
-        // nayba stuff
-
-
-
         let ij = constants.testVal;
-
-
         getHexNeighbours(ij).forEach(function(nHex) {
             let nPix = transformToPix(getCanonicalHexPosition(nHex, bfs), s);
             drawHex(ctx, nPix[0], nPix[1], sizeToFill, "rgb(0,0,0)");
         }, this);
         drawHex(ctx, transformToPix(ij, s)[0], transformToPix(ij, s)[1], 5, "rgb(255, 0, 50)");
-
-        // getHexNeighbours([45,-22]).forEach(function(nHex) {
-        //     let nPix = transformToPix(getCanonicalHexPosition(nHex, bfs), s);
-        //     drawHex(ctx, nPix[0], nPix[1], sizeToFill+5, "rgb(255,0,0)");
-        // }, this);
 
         return state;
     }
@@ -213,30 +174,15 @@ function getHexNeighbours([i,j]){
 
 function getCanonicalHexPosition([i,j], boundaryFunctions){
     const bfs = boundaryFunctions;
-    // We can't use a simple range for j, but instead must map onto the range from min to max
-    // to include negatives.
+    const jMin = bfs.generateJMin(i);
 
-    // -3 -2 -1  0  1  2  3 value
-    // -3 -2 -1  0  1 -1  0 remModified - this works for positive values
-    //  1  2  0  1  2  0 if(-ve) range + rem
-    //  1  2  0  1  2  0 canonical
-
-    let jMin = bfs.generateJMin(i);
-
-    let remI = i%(bfs.getIRange());
+    const remI = i%(bfs.getIRange());
     // If the remainder is negative (note that in JS % isn't a modulus), we need to map onto i range
-    let chpI = remI < 0 ? bfs.generateIMax() + remI : remI;
-    let deltaI = chpI - i;
+    const chpI = remI < 0 ? bfs.generateIMax() + remI : remI;
+    const deltaI = chpI - i;
 
-    let chpJ = getCanonicalHexJ(bfs, chpI, j, deltaI);
-    // let remJ = (j-jMin)%(bfs.getJRange(chpI)) + jMin;
-    // // Need to transform j by amount relative to change in x position as result of canonicalisation
-    // let remJt = remJ - (deltaI / 2);
-    // // If the remainder is below the lower limit, we need to map onto j range
-    // let chpJ = remJt < jMin ? bfs.generateJMax(chpI) + remJt + Math.floor((chpI/2)) : remJt;
-
-    let chp = [chpI, chpJ];
-    console.log(`(${i},${j}) => (${chp[0]},${chp[1]})`);
+    const chpJ = getCanonicalHexJ(bfs, chpI, j, deltaI);
+    const chp = [chpI, chpJ];
     return chp;
 }
 
@@ -244,26 +190,12 @@ function getCanonicalHexJ(bfs, i, j, deltaI){
     // Calculate canonical j coordinate, given a canonical i coordinate.
     // (Note that i should already have been canonicalised.)
     // deltaI is the change in i, if i has crossed a periodic boundary.
-    let jMin = bfs.generateJMin(i);
-
-    // oh god why do we need to do this
-    // if(deltaI !== 0) deltaI -= Math.sign(deltaI);
-    
-
-    let initJ = j + Math.floor((-deltaI)/2);
-    // let initJ = deltaI === 0 ? j : j + Math.floor((deltaI - Math.sign(deltaI))/2);
-    
-    let remJ = (initJ-jMin)%(bfs.getJRange(i)) + jMin;
-    // Need to transform j by amount relative to change in x position as result of canonicalisation
-    // let remJt = remJ - (deltaI / 2);
+    const jMin = bfs.generateJMin(i);
+    const initJ = j + Math.floor((-deltaI)/2);
+    const remJ = (initJ-jMin)%(bfs.getJRange(i)) + jMin;
     // If the remainder is below the lower limit, we need to map onto j range
-    let jMax = bfs.generateJMax(i);
-    let jRange = bfs.getJRange(i);
-    let chpJ = remJ < jMin ? jRange + remJ : remJ;
-    // now, when we are on teh right hand side, ns on the left are one hex too high.
-    // vice versa on teh left
-    let someOtherCondition = false;
-    if(remJ < jMin && someOtherCondition) chpJ -= jMin;
+    const jRange = bfs.getJRange(i);
+    const chpJ = remJ < jMin ? jRange + remJ : remJ;
     return chpJ;
 }
 
