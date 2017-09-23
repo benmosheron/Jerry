@@ -9,13 +9,14 @@ function getJenerator(){
         return `<input type="range" min="${s.min}" max="${s.max}" value="${s.default}" class="slider" id="${s.id}">`;
     }
 
-    function initCanvas(constants, strategy){
+    function initCanvas(constants){
         let state = {};
+        const strategy = constants.strategy;
         let canvas = document.getElementById(constants.canvasId);
         let ctx = canvas.getContext("2d");
         let size = constants.cellSize;
-        let nx = constants.canvasWidth / size;
-        let ny = constants.canvasHeight / size;
+        let nx = Math.floor(constants.canvasWidth / size);
+        let ny = Math.floor(constants.canvasHeight / size);
         switch(strategy){
             case "random":
                 state = genRandom(ctx, nx, ny, size);
@@ -77,15 +78,15 @@ function getJenerator(){
         const sizeToFill = constants.cellSize;
 
         // lower horizontal bound on hexagons
-        let xBound = Math.floor(transformToHex([constants.canvasWidth+s, 0], s)[0]);
+        const xBound = Math.floor(transformToHex([constants.canvasWidth, 0], s)[0]);
         // -(s/root3) because every other vertical column will be s/root3 lower
-        let yBound = Math.floor(transformToHex([-s, constants.canvasHeight-(s/root3)], s)[1]);
-        let bfs = getBoundaryFunctions([xBound,yBound],s);
+        const yBound = Math.floor(transformToHex([0, constants.canvasHeight-(s/root3)], s)[1]);
+        const bfs = getBoundaryFunctions([xBound,yBound]);
 
         // Draw them for lols
-        for (var i = 0; i < xBound; i++) {
-            let jMin = bfs.generateJMin(i);
-            let jMax = bfs.generateJMax(i);
+        for (var i = 0; i < bfs.generateIMax(); i++) {
+            const jMin = bfs.generateJMin(i);
+            const jMax = bfs.generateJMax(i);
             for (var j = jMin; j < jMax; j++) {
                 let xyPix = transformToPix([i, j], s);
                 drawHexRandom(ctx, xyPix[0], xyPix[1], sizeToFill);
@@ -93,35 +94,36 @@ function getJenerator(){
         }
 
         // testing the limits
-        for (var i = 0; i < xBound; i++) {
-            let jMin = bfs.generateJMin(i);
-            let jMax = bfs.generateJMax(i);
-            for (var j = jMin; j < jMax; j++) {
-                let xyPix = transformToPix([i, j], s);
-                let draw = (colour) => drawHex(ctx, xyPix[0], xyPix[1], sizeToFill, colour);
-                if(bfs.isLeftBoundary([i,j])){
-                    draw("rgb(50,50,50)");
-                }
-                if(bfs.isRightBoundary([i,j])){
-                    draw("rgb(50,50,50)");
-                }
-                if(bfs.isTopBoundary([i,j])){
-                    draw("rgb(0,0,0)");
-                }
-                if(bfs.isInnerTopBoundary([i,j])){
-                    draw("rgb(100,100,100)");
-                }
-                if(bfs.isBottomBoundary([i,j])){
-                    draw("rgb(0,0,0");
-                }
-                if(bfs.isInnerBottomBoundary([i,j])){
-                    draw("rgb(100,100,100");
-                }
-            }
-        }
+        // for (var i = 0; i < xBound; i++) {
+        //     let jMin = bfs.generateJMin(i);
+        //     let jMax = bfs.generateJMax(i);
+        //     for (var j = jMin; j < jMax; j++) {
+        //         let xyPix = transformToPix([i, j], s);
+        //         let draw = (colour) => drawHex(ctx, xyPix[0], xyPix[1], sizeToFill, colour);
+        //         if(bfs.isInnerTopBoundary([i,j])){
+        //             draw("rgb(100,100,100)");
+        //         }
+        //         if(bfs.isInnerBottomBoundary([i,j])){
+        //             draw("rgb(100,100,100");
+        //         }
+        //         if(bfs.isLeftBoundary([i,j])){
+        //             draw("rgb(50,50,50)");
+        //         }
+        //         if(bfs.isRightBoundary([i,j])){
+        //             draw("rgb(50,50,50)");
+        //         }
+        //         if(bfs.isTopBoundary([i,j])){
+        //             draw("rgb(0,0,0)");
+        //         }
+        //         if(bfs.isBottomBoundary([i,j])){
+        //             draw("rgb(0,0,0");
+        //         }
+        //     }
+        // }
+
         // nayba stuff
         // getHexNeighbours([0,0]).forEach(function(nHex) {
-        //     let nPix = transformToPix(nHex, s);
+        //     let nPix = transformToPix(getCanonicalHexPosition(nHex, bfs), s);
         //     drawHex(ctx, nPix[0], nPix[1], sizeToFill+5, "rgb(0,0,0)");
         // }, this);
 
@@ -136,6 +138,13 @@ function getJenerator(){
 }
 
 // todo move these elsewhere, along with colour functions and vector stuff
+// hex.js
+// canvasController.js
+// Create npm modules?
+// BenLovesVectors.js
+// BenLovesColours.js
+// BenLovesCanvases.js
+
 const root3 = Math.sqrt(3);
 let rand255 = () => Math.floor(Math.random() * 256);
 let randomColour = () => `rgb(${rand255()}, ${rand255()}, ${rand255()})`;
@@ -190,16 +199,35 @@ function getHexNeighbours([i,j]){
     ];
 }
 
-function getCanonicalHexPosition([i,j]){
+function getCanonicalHexPosition([i,j], boundaryFunctions){
+    const bfs = boundaryFunctions;
     // What we really want is a canonical set of hexagons.
     // Every hexagon that exists in the 2d plane can be mapped to a hex
-    // in this canonical set
+    // in this canonical set.
+    //
+    // The result will be some modulus of the boundary limits.
+    // Complicated by the fact that in the transformed coordinates,
+    // the y boundaries are dependent on x.
+    //
+    // (j%(generateJMax(i)-generateJMin(i))))
+    // We can't use a simple range for j, but instead must map onto the range from min to max
+    // to include negatives.
+    // plus min to map to zero, then mod, then minus min
+    let jMin = bfs.generateJMin(i);
+    let chp = [i%bfs.getIRange(), (j-jMin)%bfs.getJRange(i) + jMin];
+    console.log(`(${i},${j}) => (${chp[0]},${chp[1]})`);
+    return chp;
 }
 
-function getBoundaryFunctions(xyHexMax, s){
+function getBoundaryFunctions(xyHexMax){
     return {
+        // Maximum i should always be even (for periodic boundary conditions)
+        generateIMax: () => 2 * Math.floor(xyHexMax[0]/2),
+        // Boundary j coordinates depends on x position
         generateJMin: (i) => Math.ceil(-i/2),
-        generateJMax: (i) => Math.floor(xyHexMax[1] - ((i-1)/2)), //either i-1 or i+1 depending on height
+        generateJMax: (i) => Math.floor(xyHexMax[1] - ((i-1)/2)),
+        getIRange: () => xyHexMax[0],
+        getJRange: function(i){return this.generateJMax(i) - this.generateJMin(i);},
         isLeftBoundary: (xyHex) => xyHex[0] === 0,
         isRightBoundary: (xyHex) => xyHex[0] === xyHexMax[0] - 1,
         isTopBoundary: (xyHex) => xyHex[0] === -xyHex[1] * 2,
@@ -209,10 +237,10 @@ function getBoundaryFunctions(xyHexMax, s){
     };
 }
 
-
 function drawHexRandom(ctx, x, y, s){
     drawHex(ctx, x, y, s, randomColour());
 }
+
 function drawHex(ctx, x, y, s, colour){
     // Draw a flat-top hexagon
     // centered on (x,y) with side length s

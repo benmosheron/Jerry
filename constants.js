@@ -1,11 +1,11 @@
 function getConstants(){
     c = {
         strategy: "hex",
-        canvasWidth: 700,
+        canvasWidth: 720,
         canvasHeight: 487,
         canvasId: "canvas0",
         cellSize: 10,
-        cellPadding: 1,
+        cellPadding: 0,
         iterationsPerFrame: 1000,
         temperatureSlider: {
             id: "temperatureSlider0",
