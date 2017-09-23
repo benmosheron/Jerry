@@ -122,9 +122,21 @@ function getJenerator(){
         // }
 
         // nayba stuff
-        // getHexNeighbours([0,0]).forEach(function(nHex) {
+
+
+
+        let ij = constants.testVal;
+
+
+        getHexNeighbours(ij).forEach(function(nHex) {
+            let nPix = transformToPix(getCanonicalHexPosition(nHex, bfs), s);
+            drawHex(ctx, nPix[0], nPix[1], sizeToFill, "rgb(0,0,0)");
+        }, this);
+        drawHex(ctx, transformToPix(ij, s)[0], transformToPix(ij, s)[1], 5, "rgb(255, 0, 50)");
+
+        // getHexNeighbours([45,-22]).forEach(function(nHex) {
         //     let nPix = transformToPix(getCanonicalHexPosition(nHex, bfs), s);
-        //     drawHex(ctx, nPix[0], nPix[1], sizeToFill+5, "rgb(0,0,0)");
+        //     drawHex(ctx, nPix[0], nPix[1], sizeToFill+5, "rgb(255,0,0)");
         // }, this);
 
         return state;
@@ -146,7 +158,7 @@ function getJenerator(){
 // BenLovesCanvases.js
 
 const root3 = Math.sqrt(3);
-let rand255 = () => Math.floor(Math.random() * 256);
+let rand255 = () => Math.floor(Math.random() * 127 + 127);
 let randomColour = () => `rgb(${rand255()}, ${rand255()}, ${rand255()})`;
 
 function transformToPix(xyHex, s){
@@ -201,22 +213,58 @@ function getHexNeighbours([i,j]){
 
 function getCanonicalHexPosition([i,j], boundaryFunctions){
     const bfs = boundaryFunctions;
-    // What we really want is a canonical set of hexagons.
-    // Every hexagon that exists in the 2d plane can be mapped to a hex
-    // in this canonical set.
-    //
-    // The result will be some modulus of the boundary limits.
-    // Complicated by the fact that in the transformed coordinates,
-    // the y boundaries are dependent on x.
-    //
-    // (j%(generateJMax(i)-generateJMin(i))))
     // We can't use a simple range for j, but instead must map onto the range from min to max
     // to include negatives.
-    // plus min to map to zero, then mod, then minus min
+
+    // -3 -2 -1  0  1  2  3 value
+    // -3 -2 -1  0  1 -1  0 remModified - this works for positive values
+    //  1  2  0  1  2  0 if(-ve) range + rem
+    //  1  2  0  1  2  0 canonical
+
     let jMin = bfs.generateJMin(i);
-    let chp = [i%bfs.getIRange(), (j-jMin)%bfs.getJRange(i) + jMin];
+
+    let remI = i%(bfs.getIRange());
+    // If the remainder is negative (note that in JS % isn't a modulus), we need to map onto i range
+    let chpI = remI < 0 ? bfs.generateIMax() + remI : remI;
+    let deltaI = chpI - i;
+
+    let chpJ = getCanonicalHexJ(bfs, chpI, j, deltaI);
+    // let remJ = (j-jMin)%(bfs.getJRange(chpI)) + jMin;
+    // // Need to transform j by amount relative to change in x position as result of canonicalisation
+    // let remJt = remJ - (deltaI / 2);
+    // // If the remainder is below the lower limit, we need to map onto j range
+    // let chpJ = remJt < jMin ? bfs.generateJMax(chpI) + remJt + Math.floor((chpI/2)) : remJt;
+
+    let chp = [chpI, chpJ];
     console.log(`(${i},${j}) => (${chp[0]},${chp[1]})`);
     return chp;
+}
+
+function getCanonicalHexJ(bfs, i, j, deltaI){
+    // Calculate canonical j coordinate, given a canonical i coordinate.
+    // (Note that i should already have been canonicalised.)
+    // deltaI is the change in i, if i has crossed a periodic boundary.
+    let jMin = bfs.generateJMin(i);
+
+    // oh god why do we need to do this
+    // if(deltaI !== 0) deltaI -= Math.sign(deltaI);
+    
+
+    let initJ = j + Math.floor((-deltaI)/2);
+    // let initJ = deltaI === 0 ? j : j + Math.floor((deltaI - Math.sign(deltaI))/2);
+    
+    let remJ = (initJ-jMin)%(bfs.getJRange(i)) + jMin;
+    // Need to transform j by amount relative to change in x position as result of canonicalisation
+    // let remJt = remJ - (deltaI / 2);
+    // If the remainder is below the lower limit, we need to map onto j range
+    let jMax = bfs.generateJMax(i);
+    let jRange = bfs.getJRange(i);
+    let chpJ = remJ < jMin ? jRange + remJ : remJ;
+    // now, when we are on teh right hand side, ns on the left are one hex too high.
+    // vice versa on teh left
+    let someOtherCondition = false;
+    if(remJ < jMin && someOtherCondition) chpJ -= jMin;
+    return chpJ;
 }
 
 function getBoundaryFunctions(xyHexMax){

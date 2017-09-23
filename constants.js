@@ -1,8 +1,10 @@
 function getConstants(){
     c = {
+        testVal: [0,0],
+
         strategy: "hex",
-        canvasWidth: 720,
-        canvasHeight: 487,
+        canvasWidth: 100,
+        canvasHeight: 100,
         canvasId: "canvas0",
         cellSize: 10,
         cellPadding: 0,
