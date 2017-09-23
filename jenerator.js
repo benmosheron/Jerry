@@ -9,7 +9,7 @@ function getJenerator(){
         return `<input type="range" min="${s.min}" max="${s.max}" value="${s.default}" class="slider" id="${s.id}">`;
     }
 
-    function initCanvas(constants){
+    function initCanvas(constants, canvasController){
         let state = {};
         const strategy = constants.strategy;
         let canvas = document.getElementById(constants.canvasId);
@@ -25,7 +25,7 @@ function getJenerator(){
                 state = genIsing(ctx, nx, ny, size);
                 break;
             case "hex":
-                state = genHex(ctx, constants);
+                state = genHex(constants, canvasController);
                 break;
             default:
                 state = genRandom(ctx, nx, ny, size);
@@ -70,7 +70,7 @@ function getJenerator(){
         return state;
     }
 
-    function genHex(ctx, constants){
+    function genHex(constants, canvasController){
         const state = {};
         const yp = constants.canvasHeight;
         const xp = constants.canvasWidth;
@@ -84,16 +84,16 @@ function getJenerator(){
             const jMax = h.generateJMax(i);
             for (var j = jMin; j < jMax; j++) {
                 let xyPix = h.transformToPix([i, j]);
-                drawHexRandom(ctx, xyPix[0], xyPix[1], sizeToFill);
+                canvasController.drawHexRandom(xyPix[0], xyPix[1], sizeToFill);
             }
         }
 
         let ij = constants.testVal;
         h.getHexNeighbours(ij).forEach(function(nHex) {
             let nPix = h.transformToPix(h.getCanonicalHexPosition(nHex));
-            drawHex(ctx, nPix[0], nPix[1], sizeToFill, "rgb(0,0,0)");
+            canvasController.drawHex(nPix[0], nPix[1], sizeToFill, "rgb(0,0,0)");
         }, this);
-        drawHex(ctx, h.transformToPix(ij)[0], h.transformToPix(ij)[1], 5, "rgb(255, 0, 50)");
+        canvasController.drawHex(h.transformToPix(ij)[0], h.transformToPix(ij)[1], 5, "rgb(255, 0, 50)");
 
         return state;
     }
@@ -110,38 +110,3 @@ function getJenerator(){
 // Create npm modules?
 // BenLovesVectors.js
 // BenLovesColours.js
-// BenLovesCanvases.js
-
-let rand255 = () => Math.floor(Math.random() * 127 + 127);
-let randomColour = () => `rgb(${rand255()}, ${rand255()}, ${rand255()})`;
-
-function drawHexRandom(ctx, x, y, s){
-    drawHex(ctx, x, y, s, randomColour());
-}
-
-function drawHex(ctx, x, y, s, colour){
-    const root3 = Math.sqrt(3);
-    // Draw a flat-top hexagon
-    // centered on (x,y) with side length s
-    ctx.fillStyle = colour;
-    // ctx.strokeStyle = "rgb(0,0,0)";
-    ctx.beginPath();
-    // Start with the right point
-    ctx.moveTo(x + s, y);
-    // Bottom right
-    ctx.lineTo(x + (s/2), y - (root3 * s)/2);
-    // Bottom left
-    ctx.lineTo(x - (s/2), y - (root3 * s)/2);
-    // Left
-    ctx.lineTo(x - s, y);
-    // Top left
-    ctx.lineTo(x - (s/2), y + (root3 * s)/2);
-    // Top right
-    ctx.lineTo(x + (s/2), y + (root3 * s)/2);
-    // Back to start
-    ctx.lineTo(x + s, y);
-    ctx.closePath();
-    // If we want to draw and outline around each hexagon
-    // ctx.stroke();
-    ctx.fill();
-}

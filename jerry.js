@@ -3,14 +3,16 @@
     let constants = getConstants();
     let strategy = constants.strategy;
 
+    
     let jenerator = getJenerator();
     let slider = jenerator.getSlider(constants);
     document.body.innerHTML += slider;
     let getTemperature = () => document.getElementById(constants.temperatureSlider.id).value / 100; 
-
+    
     let canvas = jenerator.getCanvasString(constants);
     document.body.innerHTML += canvas;
-    let state = jenerator.initCanvas(constants, strategy);
+    const canvasController = CanvasController(constants.canvasId);
+    let state = jenerator.initCanvas(constants, canvasController);
 
     // Add a state method to read the temperature from the slider
     state.getTemperature = getTemperature;
