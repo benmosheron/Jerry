@@ -1,8 +1,6 @@
 function getConstants(){
     c = {
-        testVal: [0,0],
-
-        strategy: "hex",
+        strategy: "ising",
         canvasWidth: 100,
         canvasHeight: 100,
         canvasId: "canvas0",

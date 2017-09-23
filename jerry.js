@@ -19,6 +19,6 @@
 
     let ctx = document.getElementById(constants.canvasId).getContext("2d");
 
-    // let enjine = getEnjine(constants, strategy, state, ctx);
-    // enjine.start(constants.iterationsPerFrame);
+    let enjine = getEnjine(constants, strategy, state, ctx);
+    enjine.start(constants.iterationsPerFrame);
 })();

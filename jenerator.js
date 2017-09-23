@@ -12,43 +12,39 @@ function getJenerator(){
     function initCanvas(constants, canvasController){
         let state = {};
         const strategy = constants.strategy;
-        let canvas = document.getElementById(constants.canvasId);
-        let ctx = canvas.getContext("2d");
         let size = constants.cellSize;
         let nx = Math.floor(constants.canvasWidth / size);
         let ny = Math.floor(constants.canvasHeight / size);
         switch(strategy){
             case "random":
-                state = genRandom(ctx, nx, ny, size);
+                state = genRandom(nx, ny, size, canvasController);
                 break;
             case "ising":
-                state = genIsing(ctx, nx, ny, size);
+                state = genIsing(nx, ny, size, canvasController);
                 break;
             case "hex":
                 state = genHex(constants, canvasController);
                 break;
             default:
-                state = genRandom(ctx, nx, ny, size);
+                state = genRandom(nx, ny, size, canvasController);
         }
         return state;
     }
 
     // Private functions
     
-    function genRandom(ctx, nx, ny, size){
+    function genRandom(nx, ny, size, canvasController){
         for (var i = 0; i < nx; i++) {
             for (var j = 0; j < ny; j++) {
                 let x = i * size;
                 let y = j * size;
-                let colour = `rgb(${rand255()}, ${rand255()}, ${rand255()})`;
-                ctx.fillStyle = colour;
-                ctx.fillRect(x, y, size, size);
+                canvasController.drawSquareRandom(x, y, size);
             }
         }
         return {};
     }
 
-    function genIsing(ctx, nx, ny, size){
+    function genIsing(nx, ny, size, canvasController){
         // Generate nx*ny states
         let state = {};
         state.length = nx * ny;
@@ -63,8 +59,7 @@ function getJenerator(){
                 state.array[i*ny+j] = s;
                 let x = i * size;
                 let y = j * size;
-                ctx.fillStyle = getColour(s);
-                ctx.fillRect(x, y, size, size);
+                canvasController.drawSquare(x, y, size, getColour(s));
             }
         }
         return state;

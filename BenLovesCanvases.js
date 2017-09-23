@@ -8,16 +8,23 @@ function CanvasController(id){
     const ctx = element.getContext("2d");
     if (ctx === null) throw new Error(`Could not get rendering context from element [${id}]. Check it is a canvas?`);
 
-    const rand255 = () => Math.floor(Math.random() * 127 + 127);
+    const rand255 = () => Math.floor(Math.random() * 256);
     const randomColour = () => `rgb(${rand255()}, ${rand255()}, ${rand255()})`;
-
+    const root3 = Math.sqrt(3);
+    
     return{
+        drawSquareRandom: function(x, y, s){
+            this.drawSquare(x, y, s, randomColour());
+        },
+        drawSquare: function(x, y, s, colour){
+            ctx.fillStyle = colour;
+            ctx.fillRect(x, y, s, s);
+        },
         drawHexRandom: function drawHexRandom(x, y, s){
             this.drawHex(x, y, s, randomColour());
         },
         
         drawHex: function drawHex(x, y, s, colour){
-            const root3 = Math.sqrt(3);
             // Draw a flat-top hexagon
             // centered on (x,y) with side length s
             ctx.fillStyle = colour;
