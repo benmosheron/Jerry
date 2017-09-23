@@ -1,4 +1,4 @@
-function getEnjine(constants, strategy, state, ctx){
+function getEnjine(constants, strategy, state, canvasController){
     let enjine = {};
     let unpack = (p) => [Math.floor(p/state.ny), p%state.ny];
     let pack = (i,j) => (i*state.ny) + j;
@@ -6,15 +6,13 @@ function getEnjine(constants, strategy, state, ctx){
         case "random":
             enjine.run = function(){
                 // Pick a random square
-                let size = constants.cellSize;
+                let size = constants.getActualSize();
                 let rand = (lim) => Math.floor(Math.random() * lim / size);
                 let x = rand(constants.canvasWidth) * size;
                 let y = rand(constants.canvasHeight) * size;
-                // Change it to a random colour
-                let rand255 = () => Math.floor(Math.random() * 256);
-                let colour = `rgb(${rand255()}, ${rand255()}, ${rand255()})`;
-                ctx.fillStyle = colour;
-                ctx.fillRect(x, y, size, size);
+                const fillSize = constants.cellSize;
+                const pad = constants.cellPadding / 2;
+                canvasController.drawSquareRandom(x + pad, y + pad, fillSize);
             };
             break;
         case "ising":
@@ -55,11 +53,12 @@ function getEnjine(constants, strategy, state, ctx){
                 }
                 
                 // Draw the square
-                let size = constants.cellSize;
+                let size = constants.getActualSize();
                 let x = i * size;
                 let y = j * size;
-                ctx.fillStyle = getColour(state.array[r]);
-                ctx.fillRect(x, y, size, size);
+                const fillSize = constants.cellSize;
+                const pad = constants.cellPadding / 2;
+                canvasController.drawSquare(x + pad, y + pad, fillSize, getColour(state.array[r]));
             };
             break;
         case "hex":

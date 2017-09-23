@@ -12,41 +12,49 @@ function getJenerator(){
     function initCanvas(constants, canvasController){
         let state = {};
         const strategy = constants.strategy;
-        let size = constants.cellSize;
-        let nx = Math.floor(constants.canvasWidth / size);
-        let ny = Math.floor(constants.canvasHeight / size);
+
         switch(strategy){
             case "random":
-                state = genRandom(nx, ny, size, canvasController);
+                state = genRandom(constants, canvasController);
                 break;
             case "ising":
-                state = genIsing(nx, ny, size, canvasController);
+                state = genIsing(constants, canvasController);
                 break;
             case "hex":
                 state = genHex(constants, canvasController);
                 break;
             default:
-                state = genRandom(nx, ny, size, canvasController);
+                state = genRandom(constants, canvasController);
         }
         return state;
     }
 
     // Private functions
     
-    function genRandom(nx, ny, size, canvasController){
+    function genRandom(constants, canvasController){
+        const size = constants.getActualSize();
+        const nx = Math.floor(constants.canvasWidth / size);
+        const ny = Math.floor(constants.canvasHeight / size);
+        const fillSize = constants.cellSize;
+        const pad = constants.cellPadding / 2;
         for (var i = 0; i < nx; i++) {
             for (var j = 0; j < ny; j++) {
                 let x = i * size;
                 let y = j * size;
-                canvasController.drawSquareRandom(x, y, size);
+                canvasController.drawSquareRandom(x + pad, y + pad, fillSize);
             }
         }
         return {};
     }
 
-    function genIsing(nx, ny, size, canvasController){
+    function genIsing(constants, canvasController){
         // Generate nx*ny states
         let state = {};
+        const size = constants.getActualSize();
+        const nx = Math.floor(constants.canvasWidth / size);
+        const ny = Math.floor(constants.canvasHeight / size);
+        const fillSize = constants.cellSize;
+        const pad = constants.cellPadding;
         state.length = nx * ny;
         state.nx = nx;
         state.ny = ny;
@@ -59,7 +67,7 @@ function getJenerator(){
                 state.array[i*ny+j] = s;
                 let x = i * size;
                 let y = j * size;
-                canvasController.drawSquare(x, y, size, getColour(s));
+                canvasController.drawSquare(x + pad, y + pad, fillSize, getColour(s));
             }
         }
         return state;
@@ -101,7 +109,6 @@ function getJenerator(){
 }
 
 // todo move these elsewhere, along with colour functions and vector stuff
-// canvasController.js
 // Create npm modules?
-// BenLovesVectors.js
+// BenLovesVectors.js (move to using vectors)
 // BenLovesColours.js
