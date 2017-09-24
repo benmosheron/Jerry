@@ -81,6 +81,8 @@ function getJenerator(){
         const sizeToFill = constants.cellSize;
         const h = hexagon(constants.canvasWidth, constants.canvasHeight, constants.getActualSize());
 
+        state.hexagon = h;
+
         // Draw them for lols
         for (var i = 0; i < h.generateIMax(); i++) {
             const jMin = h.generateJMin(i);
@@ -91,7 +93,7 @@ function getJenerator(){
             }
         }
 
-        let ij = constants.testVal;
+        let ij = [0,0];
         h.getHexNeighbours(ij).forEach(function(nHex) {
             let nPix = h.transformToPix(h.getCanonicalHexPosition(nHex));
             canvasController.drawHex(nPix[0], nPix[1], sizeToFill, "rgb(0,0,0)");

@@ -62,7 +62,10 @@ function getEnjine(constants, strategy, state, canvasController){
             };
             break;
         case "hex":
-            enjine.run = function(){};
+            enjine.run = function(){
+                const h = state.hexagon;
+                
+            };
             break;
     };
     enjine.start = function(iterationsPerFrame){
