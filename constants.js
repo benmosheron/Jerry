@@ -1,6 +1,6 @@
 function getConstants(){
     c = {
-        strategy: "ising",
+        strategy: "hex",
         canvasWidth: 1000,
         canvasHeight: 400,
         canvasId: "canvas0",
