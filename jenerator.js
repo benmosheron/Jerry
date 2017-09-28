@@ -100,6 +100,20 @@ function getJenerator(){
         }, this);
         canvasController.drawHex(h.transformToPix(ij)[0], h.transformToPix(ij)[1], 5, "rgb(255, 0, 50)");
 
+
+        // mousehandler
+        canvasController.addMouseMoveHandler(function(evt){
+            let x = evt.offsetX;
+            let y = evt.offsetY;
+            // transform to hex
+            let xyHex = h.getCanonicalHexPosition(h.transformToHex([x,y]).map(e => Math.round(e)));
+            canvasController.drawHex(h.transformToPix(xyHex)[0], h.transformToPix(xyHex)[1], sizeToFill - 1, "rgb(0, 0, 0)");
+            h.getHexNeighbours(xyHex).forEach(function(nHex) {
+                let nPix = h.transformToPix(h.getCanonicalHexPosition(nHex));
+                canvasController.drawHex(nPix[0], nPix[1], sizeToFill - 1, "rgb(0,0,0)");
+            }, this);
+        });
+
         return state;
     }
 

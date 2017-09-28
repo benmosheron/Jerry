@@ -23,7 +23,6 @@ function CanvasController(id){
         drawHexRandom: function drawHexRandom(x, y, s){
             this.drawHex(x, y, s, randomColour());
         },
-        
         drawHex: function drawHex(x, y, s, colour){
             // Draw a flat-top hexagon
             // centered on (x,y) with side length s
@@ -48,6 +47,9 @@ function CanvasController(id){
             // If we want to draw and outline around each hexagon
             // ctx.stroke();
             ctx.fill();
+        },
+        addMouseMoveHandler: function(handler){
+            element.onmousemove = handler;
         }
     }
 }

@@ -38,15 +38,8 @@ function hexagon(canvasWidth, canvasHeight, hexSize){
     // transform [x,y] hex coordinates to [x,y] pixel positions
     function transformToPix(xyHex){
         const axes = vector.create(xyHex).transpose();
-        // let result = scaleAxisX
-        //                 .matrixMultiply(shearAxisX)
-        //                 .matrixMultiply(X)
-        //                 .matrixMultiply(Y)
-        //                 .matrixMultiply(S)
-        //                 .matrixMultiply(axes)
-        //                 .add(offset);
         const result = T.matrixMultiply(S).matrixMultiply(axes).add(offset);
-
+        // Need a vector method to collapse to 1D
         return result.transpose().get(0).array;
     }
 
