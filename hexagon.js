@@ -1,33 +1,53 @@
 // Functions for working with a hex grid.
 function hexagon(canvasWidth, canvasHeight, hexSize){
     const root3 = Math.sqrt(3);
-    let s = hexSize;
+    const s = hexSize;
+    // Diagonal matrix, with elements of s
+    const S = vector.create2x2(s,0,0,s);
+    // We want to rotate the x axis up by 30 degrees (pi/6),
+    // but we don't want to rotate the y axis too. 
+    // Instead we first scale x by root3/2, then shear it upwards by 1/2
+    // const scaleAxisX = vector.create(
+    //     [[root3/2, 0],
+    //      [      0, 1]]);
+    // const shearAxisX = vector.create(
+    //     [[  1, 0],
+    //      [1/2, 1]]);
+    // // X is the scaling of the x axis in proportion to hex size
+    // const X = vector.create(
+    //     [[root3, 0],
+    //      [    0, 1]]);
+    // // Y is the scaling of the y axis in proportion to hex size
+    // const Y = vector.create(
+    //     [[1,     0],
+    //      [0, root3]]);
+    // We can pre-calculate the multiplication scaleAxisX * shearAxisX * X * Y
+    // to the matrix T.
+    const T = vector.create(
+        [[    3/2,     0],
+         [root3/2, root3]]);
+    // O is the offset amount of the first hexagon, proportional to hex size
+    const O = vector.create([1, root3/2]).transpose();
+    // Absolute offset
+    const offset = S.matrixMultiply(O);
     // lower horizontal bound on hexagons
     const xBound = Math.floor(transformToHex([canvasWidth, 0], s)[0]);
     // -(s/root3) because every other vertical column will be s/root3 lower
     const yBound = Math.floor(transformToHex([0, canvasHeight-(s/root3)], s)[1]);
     const bfs = getBoundaryFunctions([xBound,yBound]);
+    // transform [x,y] hex coordinates to [x,y] pixel positions
     function transformToPix(xyHex){
-        let xHex = xyHex[0];
-        let yHex = xyHex[1];
+        const axes = vector.create(xyHex).transpose();
+        // let result = scaleAxisX
+        //                 .matrixMultiply(shearAxisX)
+        //                 .matrixMultiply(X)
+        //                 .matrixMultiply(Y)
+        //                 .matrixMultiply(S)
+        //                 .matrixMultiply(axes)
+        //                 .add(offset);
+        const result = T.matrixMultiply(S).matrixMultiply(axes).add(offset);
 
-        // Transforms are T_hp = RXYv + Offset where:
-        // X is the scaling of the x axis
-        // Y is the scaling of the y axis
-        // R is the rotation of the x axis down by 30 degrees
-        // Offset is the offset amount of the first hexagon
-
-        // A proportion of the x value gets transferred to the y axis
-        // due to the 30 degree rotation of the x axis.
-        let xPix = (xHex * s * root3) * (root3 / 2);
-        let yPix = yHex * s * root3 + (xPix / root3);
-        // Scale from x component
-
-        // Offset
-        xPix += s;
-        yPix += root3 * s / 2;
-
-        return [xPix, yPix];
+        return result.transpose().get(0).array;
     }
 
     function transformToHex(xyPix){
