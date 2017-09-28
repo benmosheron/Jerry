@@ -1,14 +1,17 @@
 (function(){
-    document.body.innerHTML += "<h1>hey</h1>";
+    document.body.innerHTML += "<h1>Get Hexed!</h1>";
     let constants = getConstants();
     let strategy = constants.strategy;
 
     
     let jenerator = getJenerator();
     let slider = jenerator.getSlider(constants);
-    document.body.innerHTML += slider;
     let getTemperature = () => document.getElementById(constants.temperatureSlider.id).value / 100; 
     
+    if(constants.strategy === "ising"){
+        document.body.innerHTML += slider;
+    }
+
     // Generate and inject canvas string.
     let canvas = jenerator.getCanvasString(constants);
     document.body.innerHTML += canvas;
