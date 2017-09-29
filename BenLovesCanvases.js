@@ -50,6 +50,9 @@ function CanvasController(id){
         },
         addMouseMoveHandler: function(handler){
             element.onmousemove = handler;
+        },
+        addClickHandler: function(handler){
+            element.onclick = handler;
         }
     }
 }

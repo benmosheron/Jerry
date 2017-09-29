@@ -73,13 +73,14 @@ function hexagon(canvasWidth, canvasHeight, hexSize){
     function getCanonicalHexPosition([i,j]){
         const jMin = bfs.generateJMin(i);
 
-        const remI = i%(bfs.getIRange());
+        const remI = i%(bfs.getIRange() - 1);
         // If the remainder is negative (note that in JS % isn't a modulus), we need to map onto i range
         const chpI = remI < 0 ? bfs.generateIMax() + remI : remI;
         const deltaI = chpI - i;
 
         const chpJ = getCanonicalHexJ(chpI, j, deltaI);
         const chp = [chpI, chpJ];
+
         return chp;
     }
 

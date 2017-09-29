@@ -1,5 +1,5 @@
 (function(){
-    document.body.innerHTML += "<h1>Get Hexed!</h1>";
+    document.body.innerHTML += "<h1>Proof of Hexagoncept</h1>";
     let constants = getConstants();
     let strategy = constants.strategy;
 
@@ -7,7 +7,7 @@
     let jenerator = getJenerator();
     let slider = jenerator.getSlider(constants);
     let getTemperature = () => document.getElementById(constants.temperatureSlider.id).value / 100; 
-    
+
     if(constants.strategy === "ising"){
         document.body.innerHTML += slider;
     }
