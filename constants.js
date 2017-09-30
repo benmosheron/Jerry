@@ -1,6 +1,7 @@
 function getConstants(){
     c = {
-        strategy: "hex",
+        generator: "ising",
+        engine: "ising",
         canvasWidth: 1000,
         canvasHeight: 400,
         canvasId: "canvas0",

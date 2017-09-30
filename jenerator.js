@@ -11,9 +11,9 @@ function getJenerator(){
 
     function initCanvas(constants, canvasController){
         let state = {};
-        const strategy = constants.strategy;
+        const generator = constants.generator;
 
-        switch(strategy){
+        switch(generator){
             case "random":
                 state = genRandom(constants, canvasController);
                 break;

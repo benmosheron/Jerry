@@ -1,17 +1,17 @@
-function getEnjine(constants, strategy, state, canvasController){
+function getEnjine(config, state, canvasController){
     let enjine = {};
     let unpack = (p) => [Math.floor(p/state.ny), p%state.ny];
     let pack = (i,j) => (i*state.ny) + j;
-    switch(strategy){
+    switch(config.engine){
         case "random":
             enjine.run = function(){
                 // Pick a random square
-                let size = constants.getActualSize();
+                let size = config.getActualSize();
                 let rand = (lim) => Math.floor(Math.random() * lim / size);
-                let x = rand(constants.canvasWidth) * size;
-                let y = rand(constants.canvasHeight) * size;
-                const fillSize = constants.cellSize;
-                const pad = constants.cellPadding / 2;
+                let x = rand(config.canvasWidth) * size;
+                let y = rand(config.canvasHeight) * size;
+                const fillSize = config.cellSize;
+                const pad = config.cellPadding / 2;
                 canvasController.drawSquareRandom(x + pad, y + pad, fillSize);
             };
             break;
@@ -53,11 +53,11 @@ function getEnjine(constants, strategy, state, canvasController){
                 }
                 
                 // Draw the square
-                let size = constants.getActualSize();
+                let size = config.getActualSize();
                 let x = i * size;
                 let y = j * size;
-                const fillSize = constants.cellSize;
-                const pad = constants.cellPadding / 2;
+                const fillSize = config.cellSize;
+                const pad = config.cellPadding / 2;
                 canvasController.drawSquare(x + pad, y + pad, fillSize, getColour(state.array[r]));
             };
             break;

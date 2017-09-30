@@ -1,28 +1,43 @@
 (function(){
     document.body.innerHTML += "<h1>Proof of Hexagoncept</h1>";
-    let constants = getConstants();
-    let strategy = constants.strategy;
-
+    let config = getConstants();
+    let params = getParams(window.location.href)
+    Object.keys(params).forEach((k) => config[k] = params[k]);
     
     let jenerator = getJenerator();
-    let slider = jenerator.getSlider(constants);
-    let getTemperature = () => document.getElementById(constants.temperatureSlider.id).value / 100; 
+    let slider = jenerator.getSlider(config);
+    let getTemperature = () => document.getElementById(config.temperatureSlider.id).value / 100; 
 
-    if(constants.strategy === "ising"){
+    if(config.generator === "ising"){
         document.body.innerHTML += slider;
     }
 
     // Generate and inject canvas string.
-    let canvas = jenerator.getCanvasString(constants);
+    let canvas = jenerator.getCanvasString(config);
     document.body.innerHTML += canvas;
 
     // Init canvas
-    const canvasController = CanvasController(constants.canvasId);
-    let state = jenerator.initCanvas(constants, canvasController);
+    const canvasController = CanvasController(config.canvasId);
+    let state = jenerator.initCanvas(config, canvasController);
 
     // Add a state method to read the temperature from the slider
     state.getTemperature = getTemperature;
 
-    let enjine = getEnjine(constants, strategy, state, canvasController);
-    enjine.start(constants.iterationsPerFrame);
+    let enjine = getEnjine(config, state, canvasController);
+    enjine.start(config.iterationsPerFrame);
+
+    function getParams(url){
+        let params = {};
+        let i = url.indexOf("?");
+        if(i < 1) return params;
+
+        url
+            .substr(i+1)
+            .split("&")
+            .map(kvp => kvp.split("="))
+            .forEach(kvp => params[kvp[0]] = kvp[1]);
+
+        return params;
+    }
+
 })();
