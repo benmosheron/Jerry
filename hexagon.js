@@ -3,31 +3,31 @@ function hexagon(canvasWidth, canvasHeight, hexSize){
     const root3 = Math.sqrt(3);
     const s = hexSize;
     // Diagonal matrix, with elements of s
-    const S = vector.create2x2(s,0,0,s);
+    const S = Vector.create2x2(s,0,0,s);
     // We want to rotate the x axis up by 30 degrees (pi/6),
     // but we don't want to rotate the y axis too. 
     // Instead we first scale x by root3/2, then shear it upwards by 1/2
-    // const scaleAxisX = vector.create(
+    // const scaleAxisX = new Vector(
     //     [[root3/2, 0],
     //      [      0, 1]]);
-    // const shearAxisX = vector.create(
+    // const shearAxisX = new Vector(
     //     [[  1, 0],
     //      [1/2, 1]]);
     // // X is the scaling of the x axis in proportion to hex size
-    // const X = vector.create(
+    // const X = new Vector(
     //     [[root3, 0],
     //      [    0, 1]]);
     // // Y is the scaling of the y axis in proportion to hex size
-    // const Y = vector.create(
+    // const Y = new Vector(
     //     [[1,     0],
     //      [0, root3]]);
     // We can pre-calculate the multiplication scaleAxisX * shearAxisX * X * Y
     // to the matrix T.
-    const T = vector.create(
+    const T = new Vector(
         [[    3/2,     0],
          [root3/2, root3]]);
     // O is the offset amount of the first hexagon, proportional to hex size
-    const O = vector.create([1, root3/2]).transpose();
+    const O = new Vector([1, root3/2]).transpose();
     // Absolute offset
     const offset = S.matrixMultiply(O);
     // lower horizontal bound on hexagons
@@ -37,7 +37,7 @@ function hexagon(canvasWidth, canvasHeight, hexSize){
     const bfs = getBoundaryFunctions([xBound,yBound]);
     // transform [x,y] hex coordinates to [x,y] pixel positions
     function transformToPix(xyHex){
-        const axes = vector.create(xyHex).transpose();
+        const axes = new Vector(xyHex).transpose();
         const result = T.matrixMultiply(S).matrixMultiply(axes).add(offset);
         // Need a vector method to collapse to 1D
         return result.transpose().get(0).array;
