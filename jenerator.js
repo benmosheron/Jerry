@@ -48,28 +48,45 @@ function getJenerator(){
     }
 
     function genIsing(constants, canvasController){
-        // Generate nx*ny states
         let state = {};
+        // Const for drawing
         const size = constants.getActualSize();
-        const nx = Math.floor(constants.canvasWidth / size);
-        const ny = Math.floor(constants.canvasHeight / size);
         const fillSize = constants.cellSize;
         const pad = constants.cellPadding / 2;
-        state.length = nx * ny;
-        state.nx = nx;
-        state.ny = ny;
-        state.array = new Array(nx * ny);
+
+        array = [];
+        state.generateIMin = () => 0;
+        state.generateJMin = () => 0;
+        state.generateIMax = () => Math.floor(constants.canvasWidth / size);
+        state.generateJMax = () => Math.floor(constants.canvasHeight / size);
+
+        const nx = state.generateIMax();
+        const ny = state.generateJMax();
+
+        state.getNeighbours = function(state, i, j){
+            let neighbours = new Array(4);
+            neighbours[0] = [i === 0 ? nx - 1 : i - 1, j];
+            neighbours[1] = [i, j === 0 ? ny - 1 : j - 1];
+            neighbours[2] = [i === nx - 1 ? 0 : i + 1, j];
+            neighbours[3] = [i, j === ny - 1 ? 0 : j + 1];
+            return neighbours;
+        };
+
+
         let rand1or1 = () => Math.random() < 0.5 ? 1 : -1;
-        let getColour = (s) => s == 1 ? "rgb(255, 255, 255)" : "rgb(0, 0, 0)";
+        let getColour = (s) => s == 1 ? "rgb(200, 200, 200)" : "rgb(50, 50, 50)";
         for (var i = 0; i < nx; i++) {
+            array.push([]);
             for (var j = 0; j < ny; j++) {
                 let s = rand1or1();
-                state.array[i*ny+j] = s;
+                array[i][j] = s;
                 let x = i * size;
                 let y = j * size;
                 canvasController.drawSquare(x + pad, y + pad, fillSize, getColour(s));
             }
         }
+
+        state.vector = new Vector(array);
         return state;
     }
 

@@ -8,7 +8,7 @@
     let slider = jenerator.getSlider(config);
     let getTemperature = () => document.getElementById(config.temperatureSlider.id).value / 100; 
 
-    if(config.generator === "ising"){
+    if(config.engine === "ising"){
         document.body.innerHTML += slider;
     }
 

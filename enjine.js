@@ -1,7 +1,5 @@
 function getEnjine(config, state, canvasController){
     let enjine = {};
-    let unpack = (p) => [Math.floor(p/state.ny), p%state.ny];
-    let pack = (i,j) => (i*state.ny) + j;
     switch(config.engine){
         case "random":
             enjine.run = function(){
@@ -16,39 +14,36 @@ function getEnjine(config, state, canvasController){
             };
             break;
         case "ising":
-            let rand1or1 = () => Math.random() < 0.5 ? 1 : -1;
-            let getColour = (s) => s == 1 ? "rgb(200, 200, 200)" : "rgb(50, 50, 50)";
-            function getNeighbours(state, i, j){
-                let neighbours = new Array(4);
-                neighbours[0] = pack(i === 0 ? state.nx - 1 : i - 1, j);
-                neighbours[1] = pack(i, j === 0 ? state.ny - 1 : j - 1);
-                neighbours[2] = pack(i === state.nx - 1 ? 0 : i + 1, j);
-                neighbours[3] = pack(i, j === state.ny - 1 ? 0 : j + 1);
-                return neighbours;
-            };
+            const rand1or1 = () => Math.random() < 0.5 ? 1 : -1;
+            const getColour = (s) => s == 1 ? "rgb(200, 200, 200)" : "rgb(50, 50, 50)";
+            // Note: flip mutates the vector - we really don't want to recreate the vector instances.
+            const flip = (i,j) => state.vector.get(i).array[j] = -state.vector.get(i).array[j];
             function calcEnergy(s, state, neighbours){
-                 return -s * neighbours.reduce((prev, next) => prev + state.array[next], 0);
+                 return -s * neighbours.reduce((prev, next) => prev + state.vector.get(next), 0);
             };
             enjine.run = function(){
+                const vSize = state.vector.size();
                 // Pick a random state
-                let r = Math.floor(Math.random() * state.length);
-                let ij = unpack(r);
-                let i = ij[0];
-                let j = ij[1];
+                // Pick a random i
+                const i = Math.floor(Math.random() * state.generateIMax());
+                // Pick a random j (which for hex, is dependent on i)
+                const jMin = state.generateJMin(i);
+                const jMax = state.generateJMax(i);
+                const jRange = jMax - jMin;
+                const j = Math.floor((Math.random() * jRange) + jMin);
+
                 // Get neighbour indices
-                let neighbours = getNeighbours(state, i, j);
-                let energyNow = calcEnergy(state.array[r], state, neighbours);
+                let neighbours = state.getNeighbours(state, i, j);
+                let energyNow = calcEnergy(state.vector.get([i,j]), state, neighbours);
                 let energyIfChanged = -energyNow;
                 let delta = energyIfChanged - energyNow;
                 if(delta < 0){
-                    // flip
-                    state.array[r] = -state.array[r];
+                    flip(i,j);
                 }
                 else{
                     let probabilityOfChange = Math.exp(-delta * state.getTemperature());
                     if(Math.random() < probabilityOfChange){
-                        // flip
-                        state.array[r] = -state.array[r];
+                        flip(i,j);
                     }
                 }
                 
@@ -58,7 +53,7 @@ function getEnjine(config, state, canvasController){
                 let y = j * size;
                 const fillSize = config.cellSize;
                 const pad = config.cellPadding / 2;
-                canvasController.drawSquare(x + pad, y + pad, fillSize, getColour(state.array[r]));
+                canvasController.drawSquare(x + pad, y + pad, fillSize, getColour(state.vector.get([i,j])));
             };
             break;
         case "hex":
