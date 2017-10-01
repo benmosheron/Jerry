@@ -9,7 +9,7 @@
     let getTemperature = () => document.getElementById(config.temperatureSlider.id).value / 100; 
 
     if(config.engine === "ising"){
-        document.body.innerHTML += slider;
+        document.body.innerHTML += `<div>${slider}</div>`;
     }
 
     // Generate and inject canvas string.

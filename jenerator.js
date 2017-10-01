@@ -59,11 +59,12 @@ function getJenerator(){
         state.generateJMin = () => 0;
         state.generateIMax = () => Math.floor(constants.canvasWidth / size);
         state.generateJMax = () => Math.floor(constants.canvasHeight / size);
+        state.at = (ij) => [ij[0], ij[1]];
 
         const nx = state.generateIMax();
         const ny = state.generateJMax();
 
-        state.getNeighbours = function(state, i, j){
+        state.getNeighbours = function(i, j){
             let neighbours = new Array(4);
             neighbours[0] = [i === 0 ? nx - 1 : i - 1, j];
             neighbours[1] = [i, j === 0 ? ny - 1 : j - 1];
@@ -99,6 +100,38 @@ function getJenerator(){
         const h = hexagon(constants.canvasWidth, constants.canvasHeight, constants.getActualSize());
 
         state.hexagon = h;
+
+        // If ising, we need to generate a state for each hex
+        if(constants.engine === "ising"){
+            const rand1or1 = () => Math.random() < 0.5 ? 1 : -1;
+            const getColour = (s) => s == 1 ? "rgb(200, 200, 200)" : "rgb(50, 50, 50)";
+
+            // We also need the following methods attached to the state for the enjine to use
+            state.generateIMin = () => h.generateIMin();
+            state.generateJMin = (i) => h.generateJMin(i);
+            state.generateIMax = () => h.generateIMax();
+            state.generateJMax = (i) => h.generateJMax(i);
+            state.getNeighbours = (i,j) => h.getHexNeighbours([i,j]).map(a => h.getCanonicalHexPosition(a));
+            // We need to shift j onto 0+
+            state.at = (ij) => [ij[0], ij[1] - h.generateJMin(ij[0])];
+
+            let array = [];
+            for (var i = 0; i < h.generateIMax(); i++) {
+                array.push([]);
+                const jMin = h.generateJMin(i);
+                const jMax = h.generateJMax(i);
+                for (var j = jMin; j < jMax; j++) {
+                    const jFromZero = j - jMin;
+                    array[i].push(rand1or1());
+                    const xyPix = h.transformToPix([i, j]);
+                    canvasController.drawHex(xyPix[0], xyPix[1], sizeToFill, getColour(array[i][jFromZero]));
+                }
+            }
+
+            state.vector = new Vector(array);
+            state.retrieve = (ij) => state.vector.get(state.at(ij));
+            return state;
+        }
 
         // Draw them for lols
         for (var i = 0; i < h.generateIMax(); i++) {
