@@ -4,7 +4,7 @@
   "description": "Canvas simulation injector",
   "main": "jerry.html",
   "dependencies": {
-    "ben-loves-vectors": "0.0.2"
+    "ben-loves-vectors": "0.0.3"
   },
   "devDependencies": {},
   "scripts": {

@@ -17,7 +17,7 @@ function getEnjine(config, state, canvasController){
             const rand1or1 = () => Math.random() < 0.5 ? 1 : -1;
             const getColour = (s) => s == 1 ? "rgb(200, 200, 200)" : "rgb(50, 50, 50)";
             // Note: flip mutates the vector - we really don't want to recreate the vector instances.
-            const flip = (ij) => state.vector.get(ij[0]).array[ij[1]] = -state.vector.get(ij[0]).array[ij[1]];
+            const flip = (ij) => state.vector.mutate(ij.slice(), -state.vector.get(ij.slice()));
             function calcEnergy(s, state, neighbours){
                  return -s * neighbours.reduce((prev, next) => prev + state.vector.get(state.at(next)), 0);
             };
@@ -61,7 +61,7 @@ function getEnjine(config, state, canvasController){
                         break;
                     case "hex":
                         let xyPix = state.hexagon.transformToPix([i, j]);
-                        canvasController.drawHex(xyPix[0], xyPix[1], fillSize, getColour(state.vector.get(state.at([i,j]))));
+                        canvasController.drawHex(xyPix[0], xyPix[1], fillSize, getColour(state.retrieve([i, j])));
                         break;
                 }
 

@@ -35,9 +35,16 @@
             .substr(i+1)
             .split("&")
             .map(kvp => kvp.split("="))
-            .forEach(kvp => params[kvp[0]] = kvp[1]);
+            .forEach(kvp => params[kvp[0]] = tryNumber(kvp[1]));
 
         return params;
+    }
+
+    function tryNumber(s){
+        // Convert numerical parameters to numbers, otherwise return the string
+        let i = parseInt(s, 10)
+        if (isNaN(i)) return s
+        else return i
     }
 
 })();

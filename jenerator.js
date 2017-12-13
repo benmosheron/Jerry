@@ -88,6 +88,7 @@ function getJenerator(){
         }
 
         state.vector = new Vector(array);
+        state.retrieve = (ij) => state.vector.get(state.at(ij));
         return state;
     }
 

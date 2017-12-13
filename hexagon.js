@@ -3,7 +3,7 @@ function hexagon(canvasWidth, canvasHeight, hexSize){
     const root3 = Math.sqrt(3);
     const s = hexSize;
     // Diagonal matrix, with elements of s
-    const S = Vector.create2x2(s,0,0,s);
+    const S = Vector.diag(2,s);
     // We want to rotate the x axis up by 30 degrees (pi/6),
     // but we don't want to rotate the y axis too. 
     // Instead we first scale x by root3/2, then shear it upwards by 1/2

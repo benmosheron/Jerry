@@ -2,10 +2,10 @@ function getConstants(){
     c = {
         generator: "ising",
         engine: "ising",
-        canvasWidth: 1000,
-        canvasHeight: 400,
+        canvasWidth: 100,
+        canvasHeight: 100,
         canvasId: "canvas0",
-        cellSize: 8,
+        cellSize: 10,
         cellPadding: 0,
         iterationsPerFrame: 200,
         temperatureSlider: {
