@@ -47,7 +47,7 @@
     const controllers = configs
         .map(e => CanvasController(e.canvasId))
         .map((e,i) => {
-            e.addClickHandler(evt => window.location.href=`/jerry.html?${configs[i].getQueryString(overrides[i])}`)
+            e.addClickHandler(() => window.location.href=getRedirectUrl(configs[i], overrides[i]))
             return e
         })
 
@@ -62,4 +62,15 @@
 
     // Run mini-sims
     configs.forEach((e,i) => getEnjine(configs[i], states[i], controllers[i]).start(configs[i].iterationsPerFrame))
+
+    function getRedirectUrl(config, override){
+        // If we are running locally, we should omit the /Jerry
+        const url =  window.location.href
+        const loc = `/jerry.html?${config.getQueryString(override)}`
+
+        if(url.startsWith("http://127.0.0.1") || url.startsWith("http://192.168")){
+            return loc
+        }
+        return "/Jerry" + loc
+    }
 })()
