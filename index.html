@@ -11,22 +11,33 @@
     <title>Simulation</title>
 </head>
 <body>
-    <div class="container" id="main-container">
-        <h1>Simulation</h1>
+    <div class="container w-50" id="main-container">
+        <h3>Ben's Injectable Javascript Simulations</h3>
+        <p> 
+            Here are a few simulations inspired by the Ising model of electromagnetism.
+        </p>
         <div class="container" id="element-container">
             <div class="row align-items-center top-margin-20">
-                <div class="col-2" id="mini-container-0"></div>
-                <div class="col-10"><p class=text-left>Ising simulation on a 2D square lattice.</p></div>
+                <div class="col-3" id="mini-container-0"></div>
+                <div class="col-9"><p class=text-left>Ising simulation on a 2D square lattice.</p></div>
             </div>
             <div class="row align-items-center top-margin-20">
-                    <div class="col-2" id="mini-container-1"></div>
-                    <div class="col-10"><p class=text-left>Or with a hex lattice.</p></div>
+                    <div class="col-3" id="mini-container-1"></div>
+                    <div class="col-9"><p class=text-left>Or with a hex lattice.</p></div>
             </div>
             <div class="row align-items-center top-margin-20">
-                    <div class="col-2" id="mini-container-2"></div>
-                    <div class="col-10"><p class=text-left>Some pseudorandom colours.</p></div>
+                    <div class="col-3" id="mini-container-2"></div>
+                    <div class="col-9"><p class=text-left>Some pseudorandom colours. No maths, just pretty.</p></div>
             </div>
         </div>
+        <p>
+            Click one of the mini-sims to go to a full size version, I will even throw in a temperature slider!
+            Try messing with some of the parameters in the query string.
+        </p>
+        <p>You can find the source code <a href="https://github.com/benmosheron/Jerry">here</a> (or just view this page's source).</p>
+        
+        <p class="invisible">Hey source viewers! The file index.js shows how to initialise, inject and run simulations using the other files referenced below.</p>
+
         <script type="text/javascript" src="node_modules/ben-loves-vectors/vector.js"></script>
         <script type="text/javascript" src="constants.js"></script>
         <script type="text/javascript" src="BenLovesCanvases.js"></script>

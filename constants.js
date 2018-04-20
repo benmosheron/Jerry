@@ -3,7 +3,7 @@ function getConstants(){
     function includeInQueryString(p){
         // Parameters to include in the query string
         return [
-            "generator","engine","canvasWidth","canvasHeight","canvasId","cellSize","cellPadding","iterationsPerFrame"
+            "generator","engine","canvasWidth","canvasHeight","cellSize","cellPadding","iterationsPerFrame"
         ].includes(p)
     }
 
