@@ -1,5 +1,4 @@
 (function(){
-    document.body.innerHTML += "<h1>Proof of Hexagoncept</h1>";
     let config = getConstants();
     let params = getParams(window.location.href)
     Object.keys(params).forEach((k) => config[k] = params[k]);

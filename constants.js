@@ -1,4 +1,12 @@
 function getConstants(){
+
+    function includeInQueryString(p){
+        // Parameters to include in the query string
+        return [
+            "generator","engine","canvasWidth","canvasHeight","canvasId","cellSize","cellPadding","iterationsPerFrame"
+        ].includes(p)
+    }
+
     c = {
         generator: "ising",
         engine: "ising",
@@ -14,7 +22,15 @@ function getConstants(){
             max: 200,
             default: 100
         },
-        getActualSize: function(){ return this.cellSize + this.cellPadding; }
+        getActualSize: function(){ return this.cellSize + this.cellPadding; },
+        getQueryString: function(overrides){ 
+            if(typeof overrides === "undefined") overrides = {}
+            function getProp(properties, key){
+                if(overrides[key]) return overrides[key]
+                else return properties[key]
+            }
+            return Object.keys(this).filter(includeInQueryString).map(e => `${e}=${getProp(this,e)}`).join("&") 
+        },
     };
 
     return c;

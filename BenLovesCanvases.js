@@ -53,6 +53,7 @@ function CanvasController(id){
         },
         addClickHandler: function(handler){
             element.onclick = handler;
+            element.className += " pointer"
         }
     }
 }
