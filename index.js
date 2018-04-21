@@ -31,7 +31,7 @@
         return {
             canvasWidth: 1000,
             canvasHeight: 1000,
-            iterationsPerFrame: e.generator == "hex" ? 200 : 1000
+            iterationsPerFrame: getIterationsPerFrame(e.generator)
         }
      })
 
@@ -63,7 +63,22 @@
     // Run mini-sims
     configs.forEach((e,i) => getEnjine(configs[i], states[i], controllers[i]).start(configs[i].iterationsPerFrame))
 
+    function getIterationsPerFrame(thing){
+      switch (thing){
+        case "hex":
+          return 200
+        case "ising":
+          return 1000
+        case "random":
+          return 10
+      }
+    }
+
     function getRedirectUrl(config, override){
+        // Apply values from the page controls
+        override.canvasWidth = ele("input-width").placeholder
+        override.canvasHeight = ele("input-height").placeholder
+
         // If we are running locally, we should omit the /Jerry
         const url =  window.location.href
         const loc = `/jerry.html?${config.getQueryString(override)}`
@@ -74,3 +89,10 @@
         return "/Jerry" + loc
     }
 })()
+
+function setSize(w,h){
+  ele("input-width").placeholder = w
+  ele("input-height").placeholder = h
+}
+
+function ele(id){ return document.getElementById(id) }

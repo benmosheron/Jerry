@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <link rel="stylesheet" href="bootstrap.min.css">
+
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="jerry.css">
     <title>Simulation</title>
 </head>
@@ -17,19 +19,36 @@
             Here are a few simulations inspired by the Ising model of electromagnetism.
         </p>
         <div class="container" id="element-container">
-            <div class="row align-items-center top-margin-20">
+            <div class="row align-items-center mt-3">
                 <div class="col-3" id="mini-container-0"></div>
                 <div class="col-9"><p class=text-left>Ising simulation on a 2D square lattice.</p></div>
             </div>
-            <div class="row align-items-center top-margin-20">
+            <div class="row align-items-center mt-3">
                     <div class="col-3" id="mini-container-1"></div>
                     <div class="col-9"><p class=text-left>Or with a hex lattice.</p></div>
             </div>
-            <div class="row align-items-center top-margin-20">
+            <div class="row align-items-center mt-3">
                     <div class="col-3" id="mini-container-2"></div>
                     <div class="col-9"><p class=text-left>Some pseudorandom colours. No maths, just pretty.</p></div>
             </div>
         </div>
+
+        <div class="btn-toolbar mb-3 mt-3" role="toolbar" aria-label="Size select">
+          <div class="btn-group mr-2 btn-group-sm" role="group" aria-label="First group">
+            <button type="button" class="btn btn-secondary" onclick="setSize(300,300)">S</button>
+            <button type="button" class="btn btn-secondary" onclick="setSize(600,600)">M</button>
+            <button type="button" class="btn btn-secondary" onclick="setSize(1000,1000)">L</button>
+            <button type="button" class="btn btn-light">Custom</button>
+          </div>
+          <div class="input-group w-50">
+            <div class="input-group-prepend">
+              <div class="input-group-text" id="btnGroupAddon">Px</div>
+            </div>
+            <input id="input-width" type="text" class="form-control jerry-small" placeholder="500" aria-label="Width" aria-describedby="btnGroupAddon">
+            <input id="input-height"type="text" class="form-control jerry-small" placeholder="500" aria-label="Height" aria-describedby="btnGroupAddon">
+          </div>
+        </div>
+
         <p>
             Click one of the mini-sims to go to a full size version, I will even throw in a temperature slider!
             Try messing with some of the parameters in the query string.
