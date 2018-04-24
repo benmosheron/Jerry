@@ -76,8 +76,15 @@
 
     function getRedirectUrl(config, override){
         // Apply values from the page controls
-        override.canvasWidth = ele("input-width").placeholder
-        override.canvasHeight = ele("input-height").placeholder
+        const valueOrPlaceholder = s => {
+            const e = ele(`input-${s}`)
+            const v = e.value
+            if(v === "") return e.placeholder
+            return v
+        }
+
+        override.canvasWidth = valueOrPlaceholder("width")
+        override.canvasHeight = valueOrPlaceholder("height")
 
         // If we are running locally, we should omit the /Jerry
         const url =  window.location.href
