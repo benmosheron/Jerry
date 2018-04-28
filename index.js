@@ -19,8 +19,7 @@
 
     // Second mini-sim can be a hex grid
     configs[1].generator = "hex"
-    configs[1].cellSize = configs[1].cellSize - 4
-    configs[1].cellPadding = configs[1].cellPadding + 1
+    configs[1].cellSize = configs[1].cellSize - 3
 
     // Third mini-sim can be a random canvas
     configs[2].generator = "random"
