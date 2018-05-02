@@ -1,69 +1,110 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="bootstrap.min.css">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="jerry.css">
-    <title>Simulation</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="bootstrap.min.css">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="jerry.css">
+  <title>Simulation</title>
 </head>
+
 <body>
-    <div class="container w-50" id="main-container">
-        <h3>Ben's Injectable Javascript Simulations</h3>
-        <p> 
-            Here are a few simulations inspired by the Ising model of electromagnetism.
-        </p>
-        <div class="container" id="element-container">
-            <div class="row align-items-center mt-3">
-                <div class="col-3" id="mini-container-0"></div>
-                <div class="col-9"><p class=text-left>Ising simulation on a 2D square lattice.</p></div>
-            </div>
-            <div class="row align-items-center mt-3">
-                    <div class="col-3" id="mini-container-1"></div>
-                    <div class="col-9"><p class=text-left>Or with a hex lattice.</p></div>
-            </div>
-            <div class="row align-items-center mt-3">
-                    <div class="col-3" id="mini-container-2"></div>
-                    <div class="col-9"><p class=text-left>Some pseudorandom colours. No maths, just pretty.</p></div>
-            </div>
+  <div class="container-fluid " id="main-container">
+    <h3>Ben's Injectable Javascript Simulations</h3>
+    <p>
+      Here are a few simulations inspired by the Ising model of ferromagnetism, which simulates what goes on inside a magnet when you mess with the temperature.
+      The model is one of the simplest known to exhibit a phase transition. There is a critical temperature above which the disorder of the system wins and we see a random mess,
+      but below which we see spontaneous magnetisation.
+    </p>
+    <div class="container" id="element-container">
+      <div class="media mb-3">
+        <div class="media-left">
+          <div class="media-object" id="mini-container-0"></div>
         </div>
-
-        <div class="btn-toolbar mb-3 mt-3" role="toolbar" aria-label="Size select">
-          <div class="btn-group mr-2 btn-group-sm" role="group" aria-label="First group">
-            <button type="button" class="btn btn-secondary" onclick="setSize(300,300)">S</button>
-            <button type="button" class="btn btn-secondary" onclick="setSize(600,600)">M</button>
-            <button type="button" class="btn btn-secondary" onclick="setSize(1000,1000)">L</button>
-            <button type="button" class="btn btn-light">Custom</button>
-          </div>
-          <div class="input-group w-50">
-            <div class="input-group-prepend">
-              <div class="input-group-text" id="btnGroupAddon">Px</div>
-            </div>
-            <input id="input-width" type="text" class="form-control jerry-small" placeholder="500" aria-label="Width" aria-describedby="btnGroupAddon">
-            <input id="input-height"type="text" class="form-control jerry-small" placeholder="500" aria-label="Height" aria-describedby="btnGroupAddon">
-          </div>
+        <div class="media-body ml-3">
+          <h5 class="media-heading">Classic 2D Ising Model</h5>
+          <p class=text-left>
+            Each square represents a single "spin" (think atom), which can exist in one of two states: up or down.
+            The probability of a spin being up or down is determined by two things: the temperature, and the state of the spin's four neighbours.
+          </p>
         </div>
+      </div>
 
-        <p>
-            Click one of the mini-sims to go to a full size version, I will even throw in a temperature slider!
-            Try messing with some of the parameters in the query string.
-        </p>
-        <p>You can find the source code <a href="https://github.com/benmosheron/Jerry">here</a> (or just view this page's source).</p>
-        
-        <p class="invisible">Hey source viewers! The file index.js shows how to initialise, inject and run simulations using the other files referenced below.</p>
+      <div class="media mb-3">
+        <div class="media-left">
+          <div class="media-object" id="mini-container-1"></div>
+        </div>
+        <div class="media-body ml-3">
+          <h5 class="media-heading">Ising Style on a Hex Grid</h5>
+          <p class=text-left>
+            The same, but with six neighbours! I use the 
+            <a href="https://en.wikipedia.org/wiki/Ising_model#Metropolis_algorithm">Metropolis-Hastings</a> 
+            algorithm to calculate the probability of a single spin changing state each iteration, and I run a few hundred iterations per frame to speed things up.
+          </p>
+        </div>
+      </div>
 
-        <script type="text/javascript" src="node_modules/ben-loves-vectors/vector.js"></script>
-        <script type="text/javascript" src="constants.js"></script>
-        <script type="text/javascript" src="BenLovesCanvases.js"></script>
-        <script type="text/javascript" src="hexagon.js"></script>
-        <script type="text/javascript" src="jenerator.js"></script>
-        <script type="text/javascript" src="enjine.js"></script>
-        <script type="text/javascript" src="index.js"></script>
+      <div class="media mb-3">
+        <div class="media-left">
+          <div class="media-object" id="mini-container-2"></div>
+        </div>
+        <div class="media-body ml-3">
+          <h5 class="media-heading">Some Pseudorandom Colours</h5>
+          <p class=text-left>
+            Fun fact: the Ising model has an analytic solution in both one and two dimensions, but three dimensions is ongoing research.
+          </p>
+          <p class=text-left>
+            (...no maths, just pretty.)
+          </p>
+        </div>
+      </div>
     </div>
-  </body>
+
+    <div class="btn-toolbar mb-3 mt-3" role="toolbar" aria-label="Size select">
+      <div class="btn-group mr-2 btn-group-sm" role="group" aria-label="First group">
+        <button type="button" class="btn btn-secondary" onclick="setSize(300,300)">S</button>
+        <button type="button" class="btn btn-secondary" onclick="setSize(600,600)">M</button>
+        <button type="button" class="btn btn-secondary" onclick="setSize(1000,1000)">L</button>
+        <button type="button" class="btn btn-light">Custom</button>
+      </div>
+      <div class="input-group w-50">
+        <div class="input-group-prepend">
+          <div class="input-group-text" id="btnGroupAddon">Px</div>
+        </div>
+        <input id="input-width" type="text" class="form-control jerry-small" placeholder="500" aria-label="Width" aria-describedby="btnGroupAddon">
+        <input id="input-height" type="text" class="form-control jerry-small" placeholder="500" aria-label="Height" aria-describedby="btnGroupAddon">
+      </div>
+    </div>
+
+    <p>
+      Click one of the mini-sims to go to a full size version, I will even throw in a temperature slider! Try messing with some
+      of the parameters in the query string.
+    </p>
+    <p>
+      Everything you see here is written purely with javascript. Well, the interesting parts anyway. 
+      There is some HTML to set up where things go, and Bootstrap CSS to make the layout behave (supposedly).
+      But all the simulations are written in plain old javascript, with no external libraries or frameworks.
+    </p>
+    <p>You can find the source code
+      <a href="https://github.com/benmosheron/Jerry">here</a> (or just view this page's source).</p>
+
+    <p class="invisible">Hey source viewers! The file index.js shows how to initialise, inject and run simulations using the other files referenced
+      below.</p>
+
+    <script type="text/javascript" src="node_modules/ben-loves-vectors/vector.js"></script>
+    <script type="text/javascript" src="constants.js"></script>
+    <script type="text/javascript" src="BenLovesCanvases.js"></script>
+    <script type="text/javascript" src="hexagon.js"></script>
+    <script type="text/javascript" src="jenerator.js"></script>
+    <script type="text/javascript" src="enjine.js"></script>
+    <script type="text/javascript" src="index.js"></script>
+  </div>
+</body>
+
 </html>

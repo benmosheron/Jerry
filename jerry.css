@@ -4,6 +4,10 @@ canvas{
     border-color: rgb(183, 233, 158);
 }
 
-.jerry-top-margin-20 { margin-top:20px; }
+.jerry-border { border-style: solid }
 
 .pointer { cursor: pointer;}
+
+#main-container{
+    max-width: 700px;
+}
