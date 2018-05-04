@@ -40,10 +40,11 @@ function hexagon(canvasWidth, canvasHeight, hexSize){
         const axes = new Vector(xyHex).transpose();
         const result = T.matrixMultiply(S).matrixMultiply(axes).add(offset);
         // Need a vector method to collapse to 1D
-        return result.transpose().get(0).array;
+        return result.collapse().array;
     }
 
     function transformToHex(xyPix){
+        // todo: vectorise this, as with transformToPix
         let xPix = xyPix[0];
         let yPix = xyPix[1];  
         

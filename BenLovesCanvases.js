@@ -13,6 +13,7 @@ function CanvasController(id){
     const root3 = Math.sqrt(3);
     
     return{
+        randomColour: randomColour,
         drawSquareRandom: function(x, y, s){
             this.drawSquare(x, y, s, randomColour());
         },
