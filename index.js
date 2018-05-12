@@ -44,7 +44,7 @@
 
     // Get canvas controllers, with click handlers added to redirect to full size sims
     const controllers = configs
-        .map(e => CanvasController(e.canvasId))
+        .map(e => new CanvasController(e.canvasId))
         .map((e,i) => {
             e.addClickHandler(() => window.location.href=getRedirectUrl(configs[i], overrides[i]))
             return e

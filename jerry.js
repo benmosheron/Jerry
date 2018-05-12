@@ -16,7 +16,7 @@
     document.body.innerHTML += canvas;
 
     // Init canvas
-    const canvasController = CanvasController(config.canvasId);
+    const canvasController = new CanvasController(config.canvasId);
     let state = jenerator.initCanvas(config, canvasController);
 
     // Add a state method to read the temperature from the slider

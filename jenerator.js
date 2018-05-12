@@ -12,6 +12,7 @@ function getJenerator(){
     function initCanvas(constants, canvasController){
         let state = {};
         const generator = constants.generator;
+        const flower = new Flower(constants, canvasController)
 
         switch(generator){
             case "random":
@@ -22,6 +23,9 @@ function getJenerator(){
                 break;
             case "hex":
                 state = genHex(constants, canvasController);
+                break;
+            case "flower":
+                state = flower.generate()
                 break;
             default:
                 state = genRandom(constants, canvasController);

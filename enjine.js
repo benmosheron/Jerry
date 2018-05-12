@@ -73,6 +73,10 @@ function getEnjine(config, state, canvasController){
                 
             };
             break;
+        case "flower":
+            // "run" method attached by the flower generator - lets do things like this from now on!
+            enjine.run = state.run
+            break;
     };
     enjine.start = function(iterationsPerFrame){
         if(typeof(iterationsPerFrame) === "undefined" || iterationsPerFrame === null) iterationsPerFrame = 1;
