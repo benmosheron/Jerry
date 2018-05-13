@@ -2,19 +2,35 @@
 // http://192.168.1.227:8080/jerry.html?generator=flower&engine=flower&canvasHeight=1000&canvasWidth=1000
 // Lets provide a generator and engine
 function Flower(config, canvasController){
+    // Important! override any iterationsPerFrame to 1
+    config.iterationsPerFrame = 1
     const centre = new Vector([config.canvasWidth / 2 , config.canvasHeight / 2]).transpose()
 
     this.generate = function(){
+        // n = number of petals
+        // r = rotation between petal placement
+        // d = pixels to move away from centre each iteration
+        const n = 200;
+        const r_def = 2*Math.PI/2.12318723821127;
+        const d = 1.0
+        document.getElementById("slider0").hidden = false
+
+        // convert 0-100 to 0->2pi
+        function getR(){ 
+            return document.getElementById("slider0").value/100 * 2*Math.PI
+         }
         // Our state will be an array of petals, and our run function
         // We probably don't need to store an array or positions, as we can calculate them each time from the parameters,
-        const petals = placePetals(1000,2*Math.PI/2.12318723821127,1.0)
+        const petals = placePetals(n,r_def,d)
         // Draw the centre
         canvasController.drawSquare(centre.collapse().x, centre.collapse().y, 10, "rgb(180,30,40)")
         renderAll(petals)
+        // Capture a petal pointer
         let point_mut = 0
         return {
             run: function(){
                 // We can reposition the petals based on input parameters
+                placePetalsInto_mutates(petals,getR(),d)
                 if(point_mut>=petals.length) point_mut = 0
                 render(petals, point_mut)
                 point_mut++
@@ -26,8 +42,9 @@ function Flower(config, canvasController){
     // HOT PATH
     function render(petals, i){
         const p = petals[i]
-        // Draw one petal per iteration (avois horrible performance, see commented code below)...
-        canvasController.drawSquareRandom(p.array[0].array[0], p.array[1].array[0], 10)
+        // Draw one petal per iteration (avoid horrible performance, see commented code below)...
+        canvasController.drawSquare(0,0,config.canvasWidth + config.canvasHeight, "rgba(255,255,255,0.01)")
+        canvasController.drawSquare(p.array[0].array[0], p.array[1].array[0], 10, "rgb(180,30,60)")
         // petals
         //     // .map(p => p.collapse()) // collapse column vectors ([[x],[y]]) to flat vector ([x,y]) // OH GOD THE PERFORMANCE!! *cries*
         //     // .map((p, i) => canvasController.drawSquareRandom(p.x, p.y, 10))
@@ -59,6 +76,14 @@ function Flower(config, canvasController){
         }
 
         return p_mut
+    }
+
+    // Generate petals by writing to the array in place
+    function placePetalsInto_mutates(array, r, d){
+        for(let i=1;i<array.length;i++){
+            array[i] = rotateAndAdd(array[i-1],r,d)
+        }
+        return array
     }
 
     function rotateAndAdd(vCanvas, theta, amt){
