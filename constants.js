@@ -22,6 +22,11 @@ function getConstants(){
             max: 200,
             default: 100
         },
+        life:{
+            flower: {
+                rSliderMax: 1000
+            }
+        },
         getActualSize: function(){ return this.cellSize + this.cellPadding; },
         getQueryString: function(overrides){ 
             if(typeof overrides === "undefined") overrides = {}

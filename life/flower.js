@@ -13,18 +13,26 @@ function Flower(config, canvasController){
         const n = 200;
         const r_def = 2*Math.PI/2.12318723821127;
         const d = 1.0
+        const phi = (1+Math.sqrt(5))/2
+
+        // Set up r slider
+        document.getElementById("slider0").max = config.life.flower.rSliderMax
+        document.getElementById("slider0").value = config.life.flower.rSliderMax/phi
+        document.getElementById("slider0").style.width = `${config.canvasWidth}px`
         document.getElementById("slider0").hidden = false
 
-        // convert 0-100 to 0->2pi
+
+        // convert 0-rMax to 0->2pi
         function getR(){ 
-            return document.getElementById("slider0").value/100 * 2*Math.PI
+            return document.getElementById("slider0").value/config.life.flower.rSliderMax * 2*Math.PI
          }
+
         // Our state will be an array of petals, and our run function
         // We probably don't need to store an array or positions, as we can calculate them each time from the parameters,
         const petals = placePetals(n,r_def,d)
         // Draw the centre
         canvasController.drawSquare(centre.collapse().x, centre.collapse().y, 10, "rgb(180,30,40)")
-        renderAll(petals)
+        //renderAll(petals)
         // Capture a petal pointer
         let point_mut = 0
         return {
