@@ -1,9 +1,9 @@
 function getConstants(){
 
     function includeInQueryString(p){
-        // Parameters to include in the query string
+        // Parameters to include in the query string (when navigating out of the index page)
         return [
-            "generator","engine","canvasWidth","canvasHeight","cellSize","cellPadding","iterationsPerFrame"
+            "generator","engine","canvasWidth","canvasHeight","cellSize","cellPadding","iterationsPerFrame","nPetals"
         ].includes(p)
     }
 
@@ -18,7 +18,7 @@ function getConstants(){
         iterationsPerFrame: 200,
         // Flower stats
         // Number of petals
-        nPetals: 200,
+        nPetals: 49,
         // Distance (px) increase from centre per petal
         dPetals: 1,
         // Slider values from zero to:

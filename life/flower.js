@@ -2,8 +2,6 @@
 // http://192.168.1.227:8080/jerry.html?generator=flower&engine=flower&canvasHeight=1000&canvasWidth=1000
 // Lets provide a generator and engine
 function Flower(config, canvasController){
-    // Important! override any iterationsPerFrame to 1
-    config.iterationsPerFrame = 1
     const centre = new Vector([config.canvasWidth / 2 , config.canvasHeight / 2]).transpose()
     const slider0 = "slider0"
     // n = number of petals

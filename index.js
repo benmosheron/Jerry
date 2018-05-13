@@ -6,6 +6,7 @@
     const configs = [
         getConstants(),
         getConstants(),
+        getConstants(),
         getConstants()
     ].map((e,i,a) => {
         // Give them all unique IDs
@@ -25,6 +26,10 @@
     configs[2].generator = "random"
     configs[2].engine = "random"
 
+    // flowaz
+    configs[3].generator = "flower"
+    configs[3].engine = "flower"
+
     // Override some properties to use in the full-size simulations
     const overrides = configs.map(e => { 
         return {
@@ -32,7 +37,10 @@
             canvasHeight: 1000,
             iterationsPerFrame: getIterationsPerFrame(e.generator)
         }
-     })
+    })
+
+    // Special overrides for flower
+    overrides[3].nPetals = 200
 
     const jenerator = getJenerator();
 
@@ -62,6 +70,7 @@
     // Run mini-sims
     configs.forEach((e,i) => getEnjine(configs[i], states[i], controllers[i]).start(configs[i].iterationsPerFrame))
 
+    // This is a rather important function, we define the IPF for each simulation.
     function getIterationsPerFrame(thing){
       switch (thing){
         case "hex":
@@ -70,6 +79,10 @@
           return 1000
         case "random":
           return 10
+        case "flower":
+            return 1
+        default:
+            return 200
       }
     }
 
