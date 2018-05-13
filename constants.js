@@ -16,16 +16,18 @@ function getConstants(){
         cellSize: 10,
         cellPadding: 0,
         iterationsPerFrame: 200,
+        // Flower stats
+        // Number of petals
+        nPetals: 200,
+        // Distance (px) increase from centre per petal
+        dPetals: 1,
+        // Slider values from zero to:
+        rSliderMax: 1000,
         temperatureSlider: {
             id: "temperatureSlider0",
             min: 0,
             max: 200,
             default: 100
-        },
-        life:{
-            flower: {
-                rSliderMax: 1000
-            }
         },
         getActualSize: function(){ return this.cellSize + this.cellPadding; },
         getQueryString: function(overrides){ 

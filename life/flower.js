@@ -5,34 +5,34 @@ function Flower(config, canvasController){
     // Important! override any iterationsPerFrame to 1
     config.iterationsPerFrame = 1
     const centre = new Vector([config.canvasWidth / 2 , config.canvasHeight / 2]).transpose()
-
+    const slider0 = "slider0"
+    // n = number of petals
+    // r = rotation between petal placement
+    // d = pixels to move away from centre each iteration
+    const n = config.nPetals
+    const d = config.dPetals
+    const PHI = (1+Math.sqrt(5))/2
     this.generate = function(){
-        // n = number of petals
-        // r = rotation between petal placement
-        // d = pixels to move away from centre each iteration
-        const n = 200;
-        const r_def = 2*Math.PI/2.12318723821127;
-        const d = 1.0
-        const phi = (1+Math.sqrt(5))/2
 
         // Set up r slider
-        document.getElementById("slider0").max = config.life.flower.rSliderMax
-        document.getElementById("slider0").value = config.life.flower.rSliderMax/phi
-        document.getElementById("slider0").style.width = `${config.canvasWidth}px`
-        document.getElementById("slider0").hidden = false
+        if(document.getElementById(slider0)){
+            document.getElementById(slider0).max = config.rSliderMax
+            document.getElementById(slider0).value = config.rSliderMax/PHI
+            document.getElementById(slider0).style.width = `${config.canvasWidth}px`
+            document.getElementById(slider0).hidden = false
+        }
 
-
-        // convert 0-rMax to 0->2pi
+        // HOT
         function getR(){ 
-            return document.getElementById("slider0").value/config.life.flower.rSliderMax * 2*Math.PI
-         }
+            // If there is no slider, divide by phi
+            if(!document.getElementById(slider0))return 2 * Math.PI / PHI
+            // convert 0->rMax to 0->2pi
+            return document.getElementById(slider0).value/config.rSliderMax * 2*Math.PI
+        }
 
         // Our state will be an array of petals, and our run function
         // We probably don't need to store an array or positions, as we can calculate them each time from the parameters,
-        const petals = placePetals(n,r_def,d)
-        // Draw the centre
-        // canvasController.drawSquare(centre.collapse().x, centre.collapse().y, 10, "rgb(180,30,40)")
-        //renderAll(petals)
+        const petals = placePetals(n,getR(),d)
         // Capture a petal pointer
         let point_mut = 0
         return {
@@ -47,7 +47,7 @@ function Flower(config, canvasController){
         }
     }
 
-    // HOT PATH
+    // HOT
     function render(petals, i){
         const p = petals[i]
         // Draw one petal per iteration (avoid horrible performance, see commented code below)...
@@ -64,7 +64,7 @@ function Flower(config, canvasController){
     function scalePetalRadius(i){
         // i <- 0..n
         // Petal is i*d pixels from centre
-        return 1 + Math.sqrt(i/1)
+        return 1 + Math.sqrt((i*d)/1)
     }
 
     // HOT
@@ -72,19 +72,12 @@ function Flower(config, canvasController){
         // i <- 0..n
         // Petal is i*d pixels from centre
         // want to avoid having r==g==b as it will blend with the background
+        const id = i*d
         const min = 30
-        const r = Math.max(180 - i/2, min)
-        const g = min// * i/10 - i*i/100
-        const b = Math.min(60 + i, 210)
+        const r = Math.max(180 - id/2, min)
+        const g = min// * id/10 - id*id/100
+        const b = Math.min(60 + id, 210)
         return `rgb(${r},${g},${b})`
-    }
-
-    function renderAll(petals){
-        petals
-        //     // .map(p => p.collapse()) // collapse column vectors ([[x],[y]]) to flat vector ([x,y]) // OH GOD THE PERFORMANCE!! *cries*
-        //     // .map((p, i) => canvasController.drawSquareRandom(p.x, p.y, 10))
-            // hack the values out of the column vector to avoid the horrible ben-loves-vectors performance
-            .map(p => canvasController.drawSquareRandom(p.array[0].array[0], p.array[1].array[0], 10))
     }
 
     // n = number of petals
@@ -105,6 +98,7 @@ function Flower(config, canvasController){
         return p_mut
     }
 
+    // HOT
     // Generate petals by writing to the array in place
     function placePetalsInto_mutates(array, r, d){
         for(let i=1;i<array.length;i++){
@@ -113,6 +107,7 @@ function Flower(config, canvasController){
         return array
     }
 
+    // HOT
     function rotateAndAdd(vCanvas, theta, amt){
         // Transform to centre
         const v = vCanvas.sub(centre)
