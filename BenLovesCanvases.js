@@ -1,23 +1,30 @@
 // Functions for drawing on a canvas
 function CanvasController(id) {
     if (typeof (id) === "undefined" || id === null) throw new Error("id cannot be null");
-
+    
     const element = document.getElementById(id);
     if (element === null) throw new Error(`Element with id [${id}] could not be found.`);
-
+    
     const ctx = element.getContext("2d");
     if (ctx === null) throw new Error(`Could not get rendering context from element [${id}]. Check it is a canvas?`);
-
+    
     const rand255 = () => Math.floor(Math.random() * 256);
     const root3 = Math.sqrt(3);
+    const pi2 = Math.PI * 2
 
     this.randomColour = () => `rgb(${rand255()}, ${rand255()}, ${rand255()})`
     this.drawSquareRandom = function (x, y, s) {
         this.drawSquare(x, y, s, this.randomColour());
     }
     this.drawSquare = function (x, y, s, colour) {
-        ctx.fillStyle = colour;
+        if(colour)ctx.fillStyle = colour;
         ctx.fillRect(x, y, s, s);
+    }
+    this.drawCircle = function (x, y, radius, colour) {
+        if(colour)ctx.fillStyle = colour;
+        ctx.beginPath()
+        ctx.arc(x,y,radius,0,pi2)
+        ctx.fill()
     }
     this.drawHexRandom = function drawHexRandom(x, y, s) {
         this.drawHex(x, y, s, randomColour());

@@ -31,7 +31,7 @@ function Flower(config, canvasController){
         // We probably don't need to store an array or positions, as we can calculate them each time from the parameters,
         const petals = placePetals(n,r_def,d)
         // Draw the centre
-        canvasController.drawSquare(centre.collapse().x, centre.collapse().y, 10, "rgb(180,30,40)")
+        // canvasController.drawSquare(centre.collapse().x, centre.collapse().y, 10, "rgb(180,30,40)")
         //renderAll(petals)
         // Capture a petal pointer
         let point_mut = 0
@@ -52,12 +52,31 @@ function Flower(config, canvasController){
         const p = petals[i]
         // Draw one petal per iteration (avoid horrible performance, see commented code below)...
         canvasController.drawSquare(0,0,config.canvasWidth + config.canvasHeight, "rgba(255,255,255,0.01)")
-        canvasController.drawSquare(p.array[0].array[0], p.array[1].array[0], 10, "rgb(180,30,60)")
+        canvasController.drawCircle(p.array[0].array[0], p.array[1].array[0], scalePetalRadius(i), scalePetalColour(i))
         // petals
         //     // .map(p => p.collapse()) // collapse column vectors ([[x],[y]]) to flat vector ([x,y]) // OH GOD THE PERFORMANCE!! *cries*
         //     // .map((p, i) => canvasController.drawSquareRandom(p.x, p.y, 10))
         //     // hack the values out of the column vector to avoid the horrible ben-loves-vectors performance
         //     .map(p => canvasController.drawSquareRandom(p.array[0].array[0], p.array[1].array[0], 10))
+    }
+
+    // HOT
+    function scalePetalRadius(i){
+        // i <- 0..n
+        // Petal is i*d pixels from centre
+        return 1 + Math.sqrt(i/1)
+    }
+
+    // HOT
+    function scalePetalColour(i){
+        // i <- 0..n
+        // Petal is i*d pixels from centre
+        // want to avoid having r==g==b as it will blend with the background
+        const min = 30
+        const r = Math.max(180 - i/2, min)
+        const g = min// * i/10 - i*i/100
+        const b = Math.min(60 + i, 210)
+        return `rgb(${r},${g},${b})`
     }
 
     function renderAll(petals){
