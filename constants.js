@@ -3,7 +3,7 @@ function getConstants(){
     function includeInQueryString(p){
         // Parameters to include in the query string (when navigating out of the index page)
         return [
-            "generator","engine","canvasWidth","canvasHeight","cellSize","cellPadding","iterationsPerFrame","nPetals"
+            "generator","engine","canvasWidth","canvasHeight","cellSize","cellPadding","iterationsPerFrame","nPetals","sliderMemorisedDelta"
         ].includes(p)
     }
 
@@ -23,6 +23,8 @@ function getConstants(){
         dPetals: 1,
         // Slider values from zero to:
         rSliderMax: 1000,
+        // Added to r_mut value to init, to maek flower spin on startup
+        sliderMemorisedDelta: 0.1,
         temperatureSlider: {
             id: "temperatureSlider0",
             min: 0,

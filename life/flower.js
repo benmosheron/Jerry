@@ -60,7 +60,7 @@ function Flower(config, canvasController) {
         // Capture a petal pointer
         let point_mut = 0
         // Also capture an r memory
-        let r_mut = getR()
+        let r_mut = getR() + config.sliderMemorisedDelta
         return {
             run: function () {
                 // We can reposition the petals based on input parameters

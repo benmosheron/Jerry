@@ -39,8 +39,8 @@
         }
     })
 
-    // Special overrides for flower
-    overrides[3].nPetals = 200
+    // Special overrides for flower (nPetals is overridden based on size)
+    overrides[3].sliderMemorisedDelta = 0
 
     const jenerator = getJenerator();
 
@@ -88,15 +88,11 @@
 
     function getRedirectUrl(config, override){
         // Apply values from the page controls
-        const valueOrPlaceholder = s => {
-            const e = ele(`input-${s}`)
-            const v = e.value
-            if(v === "") return e.placeholder
-            return v
-        }
-
-        override.canvasWidth = valueOrPlaceholder("width")
-        override.canvasHeight = valueOrPlaceholder("height")
+        const w = valueOrPlaceholder("width")
+        const h = valueOrPlaceholder("height")
+        override.canvasWidth = w
+        override.canvasHeight = h
+        override.nPetals = Math.round(Math.min(w,h)/2)
 
         // If we are running locally, we should omit the /Jerry
         const url =  window.location.href
@@ -108,6 +104,13 @@
         return "/Jerry" + loc
     }
 })()
+
+function valueOrPlaceholder(s){
+    const e = ele(`input-${s}`)
+    const v = e.value
+    if(v === "") return e.placeholder
+    return v
+}
 
 function setSize(w,h){
   ele("input-width").placeholder = w
