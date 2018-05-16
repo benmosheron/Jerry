@@ -28,12 +28,12 @@ function CanvasController(id) {
         ctx.arc(x,y,radius,0,pi2)
         ctx.fill()
     }
-    this.drawCircles = function(xyPxs, radius, colour){
+    this.drawCircles = function(xyPxs, radii, colour){
         if(colour)ctx.fillStyle = colour;
         for (let i = 0; i < xyPxs.length; i++) {
             const element = xyPxs[i];
             ctx.beginPath()
-            ctx.arc(element[0],element[1],radius,0,pi2)
+            ctx.arc(element[0],element[1],radii[i],0,pi2)
             ctx.fill()
         }
     }

@@ -10,10 +10,24 @@ function Flower(config, canvasController) {
     // d = pixels to move away from centre each iteration
     const n = config.nPetals
     const d = config.dPetals
+    const radii = getRadii()
+
+    function getRadii(){
+        let arr_mut = []
+        for (let i = 0; i < n; i++) {
+            // Distance from centre
+            const dfc = i*d
+            arr_mut.push(Math.sqrt(dfc))
+        }
+        return arr_mut
+    }
 
     // Slow mode: only change r by a tiny set amount
     const SLOW_DELTA = 0.00001
 
+    //////////
+    // Main //
+    //////////
     this.generate = function () {
 
         // Set up r slider
@@ -132,6 +146,6 @@ function Flower(config, canvasController) {
         canvasController.clear()
         // fast render all
         const xyPxs = petals.map(p => [p.array[0].array[0], p.array[1].array[0]])
-        canvasController.drawCircles(xyPxs, 5, "rgb(40, 208, 214)")
+        canvasController.drawCircles(xyPxs, radii, "rgb(40, 208, 214)")
     }
 }
