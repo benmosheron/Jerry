@@ -80,12 +80,13 @@ function getEnjine(config, state, canvasController){
     };
     enjine.start = function(iterationsPerFrame){
         if(typeof(iterationsPerFrame) === "undefined" || iterationsPerFrame === null) iterationsPerFrame = 1;
-        setInterval(
-            function(){
-                for (var i = 0; i < iterationsPerFrame; i++) {
-                    enjine.run();
-                }
-            }, 16);
+        function runOnce(timeStamp){
+            for (var i = 0; i < iterationsPerFrame; i++) {
+                enjine.run();
+            }
+            window.requestAnimationFrame(runOnce)
+        }
+        window.requestAnimationFrame(runOnce)
     }
     return enjine;
 }
