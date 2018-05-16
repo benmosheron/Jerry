@@ -4,11 +4,18 @@
     Object.keys(params).forEach((k) => config[k] = params[k]);
     
     let jenerator = getJenerator();
-    let slider = jenerator.getSlider(config);
     let getTemperature = () => document.getElementById(config.temperatureSlider.id).value / 100; 
 
     if(config.engine === "ising"){
-        document.body.innerHTML += `<div>${slider}</div>`;
+        const slider0=config.temperatureSlider.id
+        if (document.getElementById(slider0)) {
+            document.getElementsByClassName("slider-spacer")[0].hidden = false
+            document.getElementsByClassName("slider-spacer")[1].hidden = false
+            document.getElementById(slider0).max = config.temperatureSlider.max
+            document.getElementById(slider0).value = config.temperatureSlider.default
+            document.getElementById(slider0).style.width = `${config.canvasWidth}px`
+            document.getElementById(slider0).hidden = false
+        }
     }
 
     // Generate and inject canvas string.

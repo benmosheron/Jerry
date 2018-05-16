@@ -1,12 +1,7 @@
 function getJenerator(){
 
     function getCanvasString(constants){
-        return `<canvas id=${constants.canvasId} width=${constants.canvasWidth} height=${constants.canvasHeight}></canvas>`
-    }
-
-    function getSlider(constants){
-        let s = constants.temperatureSlider;
-        return `<input type="range" min="${s.min}" max="${s.max}" value="${s.default}" class="slider" id="${s.id}">`;
+        return `<canvas id=${constants.canvasId} class=${constants.canvasClass} width=${constants.canvasWidth} height=${constants.canvasHeight}></canvas>`
     }
 
     function initCanvas(constants, canvasController){
@@ -174,7 +169,6 @@ function getJenerator(){
 
     return {
         getCanvasString: getCanvasString,
-        getSlider: getSlider,
         initCanvas: initCanvas
     }
 }

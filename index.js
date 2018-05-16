@@ -11,6 +11,8 @@
     ].map((e,i,a) => {
         // Give them all unique IDs
         e.canvasId = `mini-canvas-${i}`
+        // Overwrite class for index canvases
+        e.canvasClass = "index-canvas"
         // And slow them right the fudge down
         e.iterationsPerFrame = 1
         return e

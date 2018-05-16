@@ -13,6 +13,7 @@ function getConstants(){
         canvasWidth: 100,
         canvasHeight: 100,
         canvasId: "canvas0",
+        canvasClass: "main-canvas",
         cellSize: 10,
         cellPadding: 0,
         iterationsPerFrame: 200,
@@ -26,7 +27,7 @@ function getConstants(){
         // Added to r_mut value to init, to maek flower spin on startup
         sliderMemorisedDelta: 0.1,
         temperatureSlider: {
-            id: "temperatureSlider0",
+            id: "slider0",
             min: 0,
             max: 200,
             default: 100

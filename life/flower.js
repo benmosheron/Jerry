@@ -32,6 +32,8 @@ function Flower(config, canvasController) {
 
         // Set up r slider
         if (document.getElementById(slider0)) {
+            document.getElementsByClassName("slider-spacer")[0].hidden = false
+            document.getElementsByClassName("slider-spacer")[1].hidden = false
             document.getElementById(slider0).max = config.rSliderMax
             document.getElementById(slider0).value = config.rSliderMax / PHI
             document.getElementById(slider0).style.width = `${config.canvasWidth}px`
