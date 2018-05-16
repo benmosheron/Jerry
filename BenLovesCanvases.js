@@ -11,6 +11,8 @@ function CanvasController(id) {
     const rand255 = () => Math.floor(Math.random() * 256);
     const root3 = Math.sqrt(3);
     const pi2 = Math.PI * 2
+    const width = element.width
+    const height = element.height
 
     this.randomColour = () => `rgb(${rand255()}, ${rand255()}, ${rand255()})`
     this.drawSquareRandom = function (x, y, s) {
@@ -25,6 +27,15 @@ function CanvasController(id) {
         ctx.beginPath()
         ctx.arc(x,y,radius,0,pi2)
         ctx.fill()
+    }
+    this.drawCircles = function(xyPxs, radius, colour){
+        if(colour)ctx.fillStyle = colour;
+        for (let i = 0; i < xyPxs.length; i++) {
+            const element = xyPxs[i];
+            ctx.beginPath()
+            ctx.arc(element[0],element[1],radius,0,pi2)
+            ctx.fill()
+        }
     }
     this.drawHexRandom = function drawHexRandom(x, y, s) {
         this.drawHex(x, y, s, randomColour());
@@ -54,6 +65,9 @@ function CanvasController(id) {
         // ctx.stroke();
         ctx.fill();
     }
+    this.clear = function(){
+        ctx.clearRect(0, 0, width, height)
+    },
     this.addMouseMoveHandler = function (handler) {
         element.onmousemove = handler;
     }
